@@ -3,7 +3,7 @@ from pygame.locals import *
 from pygame import Rect
 from xml import sax
 
-#read the XML file
+#read tileset and inicialize te vector of tiles
 class Tileset:
     def __init__(self, file, tile_width, tile_height):
         image = pygame.image.load(file).convert_alpha()
@@ -13,9 +13,11 @@ class Tileset:
         self.tile_width = tile_width
         self.tile_height = tile_height
         self.tiles = []
+        gid=0
         for line in xrange(image.get_height()/self.tile_height):
             for column in xrange(image.get_width()/self.tile_width):
-                print "line : " + str(line) + "column " + str(column)
+                print "line : " + str(line) + " column " + str(column) + " gid: " + str(gid)
+                gid+=1
                 pos = Rect(
                         column*self.tile_width,
                         line*self.tile_height,
@@ -26,6 +28,7 @@ class Tileset:
     def get_tile(self, gid):
         return self.tiles[gid]
 
+#read TMX file and Draw tiles on screen
 class TMXHandler(sax.ContentHandler):
     def __init__(self):
         self.width = 0
@@ -39,7 +42,7 @@ class TMXHandler(sax.ContentHandler):
         self.tileset = None
 
     def startElement(self, name, attrs):
-        # get most general map informations and create a surface
+        # get map informations and create a surface
         if name == 'map':
             self.columns = int(attrs.get('width', None))
             self.lines  = int(attrs.get('height', None))
@@ -52,10 +55,7 @@ class TMXHandler(sax.ContentHandler):
         elif name=="image":
             source = attrs.get('source', None)
             self.tileset = Tileset(source, self.tile_width, self.tile_height)
-        # store additional properties.
-        elif name == 'property':
-            self.properties[attrs.get('name', None)] = attrs.get('value', None)
-        # starting counting
+        # starting counting tiles
         elif name == 'layer':
             self.line = 0
             self.column = 0
@@ -72,7 +72,7 @@ class TMXHandler(sax.ContentHandler):
                 self.column = 0
                 self.line += 1
 
-    # just for debugging
+    #debug
     def endDocument(self):
         print self.width, self.height, self.tile_width, self.tile_height
         print self.properties

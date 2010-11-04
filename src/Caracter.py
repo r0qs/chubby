@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 class Caracter(pygame.sprite.Sprite):
-    x,y = (32,130)
+    x,y = (32,160)
     def __init__(self, name, img, frames=1, width=32, height=32, fps=5):
         self.name = name
         self.alive = True
