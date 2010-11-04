@@ -22,7 +22,7 @@ def main():
     COMMAND_TIMEOUT = 750
     REPEAT_DELAY = 30 #milisseconds between each KEYDOWN event (when repeating)
     KEY_TIMEOUT = 185 #MAX milisseconds between key pressings
-    SCREEN_WIDTH, SCREEN_HEIGHT = (640, 256)
+    SCREEN_WIDTH, SCREEN_HEIGHT = (640, 192)
 
     screen_surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Fat Good Samaritan")
