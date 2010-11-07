@@ -15,7 +15,7 @@ class Caracter(pygame.sprite.Sprite):
             self._framelist.append(img.subsurface((i*width,0,width,height)))
         self.image = self._framelist[0]
         self._start = pygame.time.get_ticks()
-        self._delay = 1000 / fps
+        self._delay = 300 / fps
         self._last_update = 0
         self._frame = 0
         self.update(pygame.time.get_ticks(), 100, 100)
@@ -29,7 +29,7 @@ class Caracter(pygame.sprite.Sprite):
 
     def update(self, t, width, height):
         # postion
-        self.x+=1
+        self.x+= 5
         if(self.x > width):
             self.x = -self._w
 

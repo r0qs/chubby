@@ -17,22 +17,21 @@ class CommandHandler(object):
         self.doClimb    = False
 
     def refresh_state(self, in_key):
-        global actual_state
-        global commands_automata
 
         input = -1
         if in_key == K_UP: input = 0
         elif in_key == K_DOWN: input = 1
         elif in_key == K_LEFT: input = 2
         elif in_key == K_RIGHT: input = 3
-        actual_state = commands_automata[input][actual_state]
+        
+        self.actual_state = _automata_transitions=[input][actual_state]
 
-        if actual_state == 5: self.doRoll        = True
-        if actual_state == 8: self.doSprint      = True
-        if actual_state == 10: self.doGetDown    = True
-        if actual_state == 11: self.doJump       = True
-        if actual_state == 13: self.doClimb      = True
-        print "estado atual:" + str(actual_state)
+        if self.actual_state == 5: self.doRoll          = True
+        elif self.actual_state == 8: self.doSprint      = True
+        elif self.actual_state == 10: self.doGetDown    = True
+        elif self.actual_state == 11: self.doJump       = True
+        elif self.actual_state == 13: self.doClimb      = True
+        print "estado atual:" + str(self.actual_state)
 
     def clear_commands(self):
         self.doRoll     = False
@@ -40,6 +39,3 @@ class CommandHandler(object):
         self.doGetDown  = False
         self.Jump       = False
         self.doClimb    = False
-
-    def reset_automata(self):
-        self.actual_state = 0
