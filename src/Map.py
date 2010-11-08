@@ -3,7 +3,11 @@ from pygame.locals import *
 from pygame import Rect
 from xml import sax
 
-#read tileset and inicialize te vector of tiles
+#TODO: 
+# Define ground level coordinates(x,y) in XML
+# 
+
+#read tileset image and fills the vector of tiles
 class Tileset:
     def __init__(self, file, tile_width, tile_height):
         image = pygame.image.load(file).convert_alpha()
@@ -16,7 +20,7 @@ class Tileset:
         gid=0
         for line in xrange(image.get_height()/self.tile_height):
             for column in xrange(image.get_width()/self.tile_width):
-                print "line : " + str(line) + " column " + str(column) + " gid: " + str(gid)
+                #print "line : " + str(line) + " column " + str(column) + " gid: " + str(gid)
                 gid+=1
                 pos = Rect(
                         column*self.tile_width,
@@ -24,7 +28,7 @@ class Tileset:
                         self.tile_width,
                         self.tile_height )
                 self.tiles.append(image.subsurface(pos))
-        print 
+
     def get_tile(self, gid):
         return self.tiles[gid]
 
@@ -37,7 +41,6 @@ class TMXHandler(sax.ContentHandler):
         self.tile_height = 0
         self.columns = 0
         self.lines  = 0
-        self.properties = {}
         self.image = None
         self.tileset = None
 
@@ -62,11 +65,10 @@ class TMXHandler(sax.ContentHandler):
         # get information of each tile and put on the surface using the tileset
         elif name == 'tile':
             gid = int(attrs.get('gid', None)) - 1
-            if gid <0: gid = 0
+            if gid < 0: gid = 0
             tile = self.tileset.get_tile(gid)
             pos = (self.column*self.tile_width, self.line*self.tile_height)
             self.image.blit(tile, pos)
-
             self.column += 1
             if(self.column>=self.columns):
                 self.column = 0
@@ -75,6 +77,5 @@ class TMXHandler(sax.ContentHandler):
     #debug
     def endDocument(self):
         print self.width, self.height, self.tile_width, self.tile_height
-        print self.properties
         print self.image
 
