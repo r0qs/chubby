@@ -8,13 +8,10 @@ from pygame.locals import *
 class Caracter(pygame.sprite.Sprite):
     x,y = (0,0)
     # Those variables will need to become global - Diego
-    gravity = 1
-    maxGravity = -10
     def __init__(self, name, img, frames=1, width=115, height=115, fps=25):
         self.name = name
         self.onGround = True
         self.onJump = False    
-        self.impulse = 0
         self.forceJump = 0
         
         self.state = 0
@@ -44,6 +41,7 @@ class Caracter(pygame.sprite.Sprite):
 
     def update(self, t, width, height):
         # postion
+        print(self.dy)
         if self.state == 11:        #jump state
             self.doJump()
             self.state = 0
@@ -52,17 +50,7 @@ class Caracter(pygame.sprite.Sprite):
         if(self.x > width):
             self.x = -self._w
         # update y coordinates
-        # Jump 
-        if self.onJump:
-            if self.forceJump < self.maxGravity:
-                self.forceJump = self.maxGravity
-            else:    
-                self.forceJump -= self.gravity
-                
-            self.dy += self.forceJump 
-        elif not self.onGround:
-            self.dy -= self.gravity
-        
+        self.gravity()
         self.y -= self.dy
             
         # fast solution for the ground colision (FIXME) ground = 325
@@ -81,28 +69,31 @@ class Caracter(pygame.sprite.Sprite):
                 self.image = self._framelist[self._frame]
             elif self.dy < 0:
                 self.image = self._framelist[5]
-                self.dy = 1
-                self.onGround = True
+            #    self.dy = 1
+                #self.onGround = True
             self._last_update = t
 
     def stop(self):
         self.dx = 0
+        
+    def gravity(self):
+        if not self.onGround:
+            self.dy -= 3
+   
 
 #FIXME:
-# jump need some BLABLABURG to stop the incrementing/decrementing of dy, i thing the collision detection help to solve this problem
+# The jump sucks... but i will fix this - Diego
     def doJump(self):
         if self.onGround:
             print "jump"
             self.onGround = False
-        if not self.onJump:
-            self.impulse = 5
-            self.forceJump = 5
             self.onJump = True
-        else:
-            if(self.impulse > 0 and self.forceJump > 2 ):
-                self.forceJump += 10
-                self.impulse -= 1
-                
+            self.forceJump = 12
+            self.dy += self.forceJump
+        elif self.onJump:
+            if(self.dy > 0):
+                self.forceJump -= 1
+                self.dy += self.forceJump
             
 #    def doRoll():
 #    def doSprint():
