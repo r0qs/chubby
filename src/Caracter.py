@@ -4,11 +4,19 @@ from pygame.locals import *
 #TODO:
 # collision detection
 
+
 class Caracter(pygame.sprite.Sprite):
     x,y = (0,0)
+    # Those variables will need to become global - Diego
+    gravity = 1
+    maxGravity = -10
     def __init__(self, name, img, frames=1, width=115, height=115, fps=25):
         self.name = name
         self.onGround = True
+        self.onJump = False    
+        self.impulse = 0
+        self.forceJump = 0
+        
         self.state = 0
         pygame.sprite.Sprite.__init__(self)
         self._w = width
@@ -38,10 +46,32 @@ class Caracter(pygame.sprite.Sprite):
         # postion
         if self.state == 11:        #jump state
             self.doJump()
+            self.state = 0
+        # update x coordinates
         self.x += self.dx
         if(self.x > width):
             self.x = -self._w
-        self.y += self.dy
+        # update y coordinates
+        # Jump 
+        if self.onJump:
+            if self.forceJump < self.maxGravity:
+                self.forceJump = self.maxGravity
+            else:    
+                self.forceJump -= self.gravity
+                
+            self.dy += self.forceJump 
+        elif not self.onGround:
+            self.dy -= self.gravity
+        
+        self.y -= self.dy
+            
+        # fast solution for the ground colision (FIXME) ground = 325
+        if self.y > 325:
+            self.dy = 0
+            self.y = 325
+            self.onGround = True
+            self.onJump = False
+        
         # animation
         if t - self._last_update > self._delay:
             self._frame += 1
@@ -64,7 +94,16 @@ class Caracter(pygame.sprite.Sprite):
         if self.onGround:
             print "jump"
             self.onGround = False
-            self.dy = -1
+        if not self.onJump:
+            self.impulse = 5
+            self.forceJump = 5
+            self.onJump = True
+        else:
+            if(self.impulse > 0 and self.forceJump > 2 ):
+                self.forceJump += 10
+                self.impulse -= 1
+                
+            
 #    def doRoll():
 #    def doSprint():
 #    def doGetDown():
