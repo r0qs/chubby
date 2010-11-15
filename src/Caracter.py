@@ -7,6 +7,13 @@ from pygame.locals import *
 class Caracter(pygame.sprite.Sprite):
     x,y = (0,0)
     def __init__(self, name, img, frames=1, width=115, height=115, fps=25):
+        self.animate = {
+	        'running':self._anim_run,
+	        'jumping':self._anim_jump
+	    }
+	    
+        self.animation_key = "running"
+        
         self.name = name
         self.onGround = True
         self.state = 0
@@ -15,14 +22,16 @@ class Caracter(pygame.sprite.Sprite):
         self._h = height        #size of caracter frames WxH
         self._y = self.y        #ground level
         self.jumpMaxHeight = 20 #maximum height of the jump
-        self.dx = 5             #distance per frame covered in x
-        self.dy = 0             #distance per frame covered in y
+        self.dx = 5             #distance per frame (velocity) covered in x
+        self.dy = 0             #distance per frame (velocity) covered in y
+        self.ddx = 0		#acceleration on the x speed
+        self.ddy = 0		#acceleration on the y speed
         self.screen = pygame.display.get_surface().get_rect()
         self._framelist = getFrameList(img, self._w, self._h)
         self.image = self._framelist[0]
         self.rect = self.image.get_rect()
         self._start = pygame.time.get_ticks()
-        self._delay = 300 / fps
+        self._delay = 1000 / fps
         self._last_update = 0
         self._frame = 0
         self.update(pygame.time.get_ticks(), 115, 115)
@@ -35,25 +44,16 @@ class Caracter(pygame.sprite.Sprite):
         return (self.x,self.y)
 
     def update(self, t, width, height):
+        #velocity
+        self.dx += self.ddx
+        self.dy += self.ddy
+        
         # postion
-        if self.state == 11:        #jump state
-            self.doJump()
         self.x += self.dx
-        if(self.x > width):
-            self.x = -self._w
-        self.y += self.dy
+        self.y -= self.dy
+        
         # animation
-        if t - self._last_update > self._delay:
-            self._frame += 1
-            if self._frame >= len(self._framelist):
-                self._frame = 0
-            if self.onGround:
-                self.image = self._framelist[self._frame]
-            elif self.dy < 0:
-                self.image = self._framelist[5]
-                self.dy = 1
-                self.onGround = True
-            self._last_update = t
+        self.animate[self.animation_key](t)
 
     def stop(self):
         self.dx = 0
@@ -61,14 +61,34 @@ class Caracter(pygame.sprite.Sprite):
 #FIXME:
 # jump need some BLABLABURG to stop the incrementing/decrementing of dy, i thing the collision detection help to solve this problem
     def doJump(self):
-        if self.onGround:
-            print "jump"
-            self.onGround = False
-            self.dy = -1
+        self.animation_key = "jumping"
+        self.dy = 5
+        self.ddy = -0.15
 #    def doRoll():
 #    def doSprint():
 #    def doGetDown():
 #    def doClimb():
+
+    def _anim_run(self, t):
+	    if t - self._last_update > self._delay:
+	        self._frame += 1
+	        if self._frame >= len(self._framelist):
+		    self._frame = 0
+	        if self.onGround:
+		    self.image = self._framelist[self._frame]
+	        elif self.dy < 0:
+		    self.image = self._framelist[5]
+		    self.dy = 1
+		    self.onGround = True
+	        self._last_update = t
+    def _anim_jump(self, t):
+	    self.image = self._framelist[7]
+	    self._last_update = t
+    
+    #def _anim_roll():
+    #def _anim_get_down():
+    #def _anim_climb():
+	
 
 
 def getFrameList(img, width, height):

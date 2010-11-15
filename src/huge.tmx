@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="320" height="10" tilewidth="64" tileheight="64">
+ <tileset firstgid="1" name="proto06" tilewidth="64" tileheight="64">
+  <image source="tilesets/proto06.png"/>
+ </tileset>
+ <layer name="sky" width="320" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3DSQ0AMAwDsHx3QCh/nOOx2JInyagWvqqlj2rprVp6qZYGAAAAAAD4zQOkXnRWADIAAA==
+  </data>
+ </layer>
+ <layer name="postes" width="320" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3MQQ3AIBQFwW+nOKAOigMk4N8AJmheQmaSve5bVe2nHu9r3qPgPt3bO/yGlM/bO/yGlOntHX5DyvL2Dr8BAAAAAACAMzZpm43KADIAAA==
+  </data>
+ </layer>
+ <layer name="carros" width="320" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3ZxxHCMBQAUTdAaABwA4QGCA1gaIDQfxXs2QfG4QvbYt/MXqX5tnRSUUiSJEmSlL8t7WhPhxGvOYQ2c8xoTgta0pUqutG94X71NVKL/E9d5p2yyHlzuC99z27K8/Pt+x7pRGe6BO2XYs0htJljRWvaUEkPetKL3g33q6+RWuR/6jLvlEXOm8N96Xt2U56fHL6vJEmSJEmS9E9+/VYoSWMR9Vb4ARPucewAMgAA
+  </data>
+ </layer>
+ <layer name="chao" width="320" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3SS1NBcQCG8SMqW1TahmSbFFuXsEUu2+hisuqiGn35nk9xzszf8878Vs/2jSLnnHPOOeecc84551yoS+EAaWRwiCMcI2sPvr9hiRWe8IwXvGKNR/ve9U2U/C/j6jnkUcAJTnGGIs7twfcdPvCJL2zxjR/84t2+d/0vSv6XcfULlFBGBZeo4go1u91uD7hfo44bNHCLOzTRstvt9oB7Gx100cM9+hhgaLfb7QH3EcaY4AFTzDDHwm632wPu/wnhYrcAMgAA
+  </data>
+ </layer>
+ <layer name="fossils" width="320" height="10">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3OVw2AQAAFwTNAMUAxRDFA8a+Cp4ILYSbZ/y0FAAAAAAAAgD9a0pq2tFd+AXjTkc50pbvuCkBpUpu61Fd+AXjTkMY0pbnuCsBnPAtyK6EAMgAA
+  </data>
+ </layer>
+</map>
