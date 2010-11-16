@@ -4,18 +4,24 @@ from pygame.locals import *
 #TODO:
 # collision detection
 
+
 class Caracter(pygame.sprite.Sprite):
     x,y = (0,0)
+    a = 2
+    # Those variables will need to become global - Diego
     def __init__(self, name, img, frames=1, width=115, height=115, fps=25):
         self.animate = {
 	        'running':self._anim_run,
 	        'jumping':self._anim_jump
-	    }
+	}
 	    
         self.animation_key = "running"
         
         self.name = name
         self.onGround = True
+        self.onJump = False    
+        self.forceJump = 0
+        
         self.state = 0
         pygame.sprite.Sprite.__init__(self)
         self._w = width
@@ -51,19 +57,45 @@ class Caracter(pygame.sprite.Sprite):
         # postion
         self.x += self.dx
         self.y -= self.dy
+            
+        # fast solution for the ground colision (FIXME) ground = 325
+        if self.y > 205:
+            self.dy = 0
+            self.ddy = 0
+            self.animation_key = "running"
+            self.y = 205
+            self.a = 2
+            self.onGround = True
+            self.onJump = False
         
         # animation
         self.animate[self.animation_key](t)
 
     def stop(self):
         self.dx = 0
+   
 
 #FIXME:
-# jump need some BLABLABURG to stop the incrementing/decrementing of dy, i thing the collision detection help to solve this problem
+# The jump sucks... but i will fix this - Diego
     def doJump(self):
-        self.animation_key = "jumping"
-        self.dy = 5
-        self.ddy = -0.15
+
+        if self.onGround:
+            print "jump"
+            self.animation_key = "jumping"
+            self.ddy = -0.15
+            self.onGround = False
+            self.onJump = True
+            self.forceJump = 4
+            self.dy += self.forceJump
+        elif self.onJump:
+            if(self.dy > 0):
+                self.a -= 0.3
+                print self.a
+                self.dy += self.a
+            if self.a <= 0:
+                self.onJump = False
+                
+            
 #    def doRoll():
 #    def doSprint():
 #    def doGetDown():
@@ -83,6 +115,7 @@ class Caracter(pygame.sprite.Sprite):
 	        self._last_update = t
     def _anim_jump(self, t):
 	    self.image = self._framelist[7]
+	    self._frame = 7
 	    self._last_update = t
     
     #def _anim_roll():

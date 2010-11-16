@@ -21,7 +21,7 @@ def main():
     #Constantes
     SLICE_SIZE_PIXEL = 5120
     SLICE_SIZE = 80
-    REPEAT_DELAY = 30 #milisseconds between each KEYDOWN event (when repeating)
+    REPEAT_DELAY = 50 #milisseconds between each KEYDOWN event (when repeating)
     KEY_TIMEOUT = 185 #MAX milisseconds between key pressings
     SCREEN_WIDTH, SCREEN_HEIGHT = (1024, 640)
 
@@ -52,7 +52,7 @@ def main():
     enemyGroup = pygame.sprite.Group()
     sceneGroup = pygame.sprite.Group()
 
-    pygame.key.set_repeat(REPEAT_DELAY*3, REPEAT_DELAY)
+    pygame.key.set_repeat(REPEAT_DELAY, REPEAT_DELAY)
     
     offset = 0
     actual_slice = slices.pop(0)
@@ -60,13 +60,7 @@ def main():
     transition = False
     while running:
         clock.tick(90)
-
-        if fatguy.y > 205:
-            fatguy.animation_key = "running" 
-            fatguy.y = 205
-            fatguy.ddy = 0
-            fatguy.dy = 0        
-                
+        
         if transition:
             join_point = SLICE_SIZE_PIXEL - offset
             screen.blit(past_slice.subsurface(offset, 0, join_point, SCREEN_HEIGHT),(0,0))
