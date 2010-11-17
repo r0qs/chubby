@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 import sys, os
-from tmx_loader import TileMapParser, ImageLoaderPygame, set_slices
+from tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_objects
 
 from xml import sax
 
@@ -37,9 +37,10 @@ def main():
     fatguy.ddy = -0.15
     
     
-    world_map = TileMapParser().parse_decode("huge.tmx")
+    world_map = TileMapParser().parse_decode("huge_objects.tmx")
     world_map.load(ImageLoaderPygame())
     
+    ground_objects = get_ground_objects(world_map)
     slices = set_slices(world_map, SLICE_SIZE, SLICE_SIZE_PIXEL)
 
     key_timeout = -1
@@ -61,6 +62,7 @@ def main():
     while running:
         clock.tick(90)
         
+        #blit level----------------------------------------------------------------------------------
         if transition:
             join_point = SLICE_SIZE_PIXEL - offset
             screen.blit(past_slice.subsurface(offset, 0, join_point, SCREEN_HEIGHT),(0,0))
@@ -77,9 +79,21 @@ def main():
             if len(slices) == 0: break
             actual_slice = slices.pop(0)
             transition = True
-
+	    #----------------------------------------------------------------------------------------------
+	    
+	    
         screen.blit(fatguy.image,  fatguy.get_pos())
         fatguy.update(pygame.time.get_ticks(), SCREEN_WIDTH, SCREEN_HEIGHT)
+        
+        if fatguy.collides_with_objects(ground_objects) == 1:
+            fatguy.dy = 0
+            fatguy.ddy = 0
+            fatguy.animation_key = "running"
+            fatguy.y = 320 - fatguy._h
+            fatguy.a = 2
+            fatguy.onGround = True
+            fatguy.onJump = False
+        
 
         if key_timeout >= 0:
             if (pygame.time.get_ticks() - key_timeout) > KEY_TIMEOUT:

@@ -27,11 +27,12 @@ class Caracter(pygame.sprite.Sprite):
         self._w = width
         self._h = height        #size of caracter frames WxH
         self._y = self.y        #ground level
-        self.jumpMaxHeight = 20 #maximum height of the jump
         self.dx = 5             #distance per frame (velocity) covered in x
         self.dy = 0             #distance per frame (velocity) covered in y
         self.ddx = 0		#acceleration on the x speed
         self.ddy = 0		#acceleration on the y speed
+        self.real_x = 0     # real x position (related to the start of the level)
+        self.real_y = self.y     # real y position (related to the start of the level)
         self.screen = pygame.display.get_surface().get_rect()
         self._framelist = getFrameList(img, self._w, self._h)
         self.image = self._framelist[0]
@@ -57,26 +58,28 @@ class Caracter(pygame.sprite.Sprite):
         # postion
         self.x += self.dx
         self.y -= self.dy
-            
-        # fast solution for the ground colision (FIXME) ground = 325
-        if self.y > 205:
-            self.dy = 0
-            self.ddy = 0
-            self.animation_key = "running"
-            self.y = 205
-            self.a = 2
-            self.onGround = True
-            self.onJump = False
+
         
         # animation
         self.animate[self.animation_key](t)
 
     def stop(self):
         self.dx = 0
+        
+    # Receives the 'ground' or 'killer' list (of 4-uples) from Game.py and returns:
+    # 0: if there's no collision at all
+    # 1: if the sprite collides with the object from the top
+    # 2: if the sprite collides with the object from the left
+    def collides_with_objects(self, objects_list):
+        for obj in objects_list:
+            if self.y + self._h >= obj[1]:
+                return 1
+        
+            
    
 
-#FIXME:
-# The jump sucks... but i will fix this - Diego
+    #FIXME:
+    # The jump sucks... but i will fix this - Diego
     def doJump(self):
 
         if self.onGround:
@@ -85,8 +88,7 @@ class Caracter(pygame.sprite.Sprite):
             self.ddy = -0.15
             self.onGround = False
             self.onJump = True
-            self.forceJump = 4
-            self.dy += self.forceJump
+            self.dy += 4
         elif self.onJump:
             if(self.dy > 0):
                 self.a -= 0.3

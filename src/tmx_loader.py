@@ -838,5 +838,21 @@ def set_slices(world_map, SLICE_SIZE, SLICE_SIZE_PIXEL):
     	slices.append(surf.copy())
     return slices
 
+def get_ground_objects(world_map):
+    ground = []
+    for g in world_map.object_groups:
+        if g.name == "ground":
+            for obj in g.objects:
+                ground.append((obj.x, obj.y, obj.width, obj.height))
+    return ground
+
+def get_killer_objects(world_map):
+    killer = []
+    for g in world_map.object_groups:
+        if g.name == "killer":
+            for obj in g.objects:
+                killer.append((obj.x, obj.y, obj.width, obj.height))
+    return killer
+
 #-------------------------------------------------------------------------------
 
