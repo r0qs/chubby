@@ -31,7 +31,7 @@ class CommandHandler(object):
         elif self.actual_state == 10: self.caracter.doGetDown()
         elif self.actual_state == 11: self.caracter.doJump()
         elif self.actual_state == 13: self.caracter.doClimb()
-        print "estado atual:" + str(self.actual_state)
+        #print "estado atual:" + str(self.actual_state)
         
         if self.final_state in self.final_list :
             self.actual_state = 0

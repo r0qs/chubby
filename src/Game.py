@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 
 import sys, os
-from tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_objects
+from tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_objects, get_killer_objects
 
 from xml import sax
 
@@ -30,17 +30,17 @@ def main():
     img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
     fatguy = Caracter("jonatas", img_fatguy, 10, 115, 115, 25)
     commandHandler = CommandHandler(fatguy)
+    cam_speed  = (4,0)
     
-    fatguy.set_pos(200,205)
-    fatguy.dx = 0
-    fatguy.dy = 5
-    fatguy.ddy = -0.15
+    fatguy.set_pos(200,200)
     
     
     world_map = TileMapParser().parse_decode("huge_objects.tmx")
     world_map.load(ImageLoaderPygame())
     
     ground_objects = get_ground_objects(world_map)
+    killer_objects = get_killer_objects(world_map)
+    print killer_objects
     slices = set_slices(world_map, SLICE_SIZE, SLICE_SIZE_PIXEL)
 
     key_timeout = -1
@@ -73,27 +73,27 @@ def main():
         else:
             screen.blit(actual_slice.subsurface((offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), (0, 0))
         
-        offset += 4
+        offset += cam_speed[0]
         if(offset + SCREEN_WIDTH) > SLICE_SIZE_PIXEL and transition == False:
             past_slice = actual_slice
             if len(slices) == 0: break
             actual_slice = slices.pop(0)
             transition = True
-	    #----------------------------------------------------------------------------------------------
+        #----------------------------------------------------------------------------------------------
 	    
 	    
         screen.blit(fatguy.image,  fatguy.get_pos())
-        fatguy.update(pygame.time.get_ticks(), SCREEN_WIDTH, SCREEN_HEIGHT)
+        fatguy.update(pygame.time.get_ticks(), SCREEN_WIDTH, SCREEN_HEIGHT, cam_speed)
         
-        if fatguy.collides_with_objects(ground_objects) == 1:
-            fatguy.dy = 0
-            fatguy.ddy = 0
-            fatguy.animation_key = "running"
-            fatguy.y = 320 - fatguy._h
-            fatguy.a = 2
-            fatguy.onGround = True
-            fatguy.onJump = False
+        obj, col_type = fatguy.collides_with_objects(ground_objects)
+        if  col_type == 1:
+            fatguy.put_on_ground_running(obj[1])
+        elif col_type ==  2:
+            running = False
         
+        obj, col_type = fatguy.collides_with_objects(killer_objects)
+        if  col_type != -1:
+            running = False
 
         if key_timeout >= 0:
             if (pygame.time.get_ticks() - key_timeout) > KEY_TIMEOUT:

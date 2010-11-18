@@ -31,4 +31,16 @@
  <objectgroup name="ground" width="320" height="10">
   <object name="" x="0" y="320" width="20480" height="320"/>
  </objectgroup>
+ <objectgroup name="killer" width="320" height="10">
+  <object name="" x="1344" y="263" width="248" height="35"/>
+  <object name="" x="1456" y="240" width="99" height="19"/>
+  <object name="" x="4544" y="265" width="247" height="31"/>
+  <object name="" x="4653" y="243" width="112" height="21"/>
+  <object name="" x="5277" y="241" width="112" height="21"/>
+  <object name="" x="5253" y="265" width="247" height="31"/>
+  <object name="" x="6343" y="264" width="247" height="32"/>
+  <object name="" x="6403" y="240" width="75" height="23"/>
+  <object name="" x="8128" y="264" width="252" height="33"/>
+  <object name="" x="8240" y="243" width="93" height="19"/>
+ </objectgroup>
 </map>
