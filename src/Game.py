@@ -28,7 +28,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Good Intentions")
     img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
-    fatguy = Caracter("jonatas", img_fatguy, 10, 115, 115, 25)
+    fatguy = Caracter("Rolando", img_fatguy, 10, 115, 115, 25)
     commandHandler = CommandHandler(fatguy)
     cam_speed  = (4,0)
     
@@ -89,11 +89,11 @@ def main():
         if  col_type == 1:
             fatguy.put_on_ground_running(obj[1])
         elif col_type ==  2:
-            running = False
+           running = True
         
         obj, col_type = fatguy.collides_with_objects(killer_objects)
         if  col_type != -1:
-            running = False
+           running = True
 
         if key_timeout >= 0:
             if (pygame.time.get_ticks() - key_timeout) > KEY_TIMEOUT:

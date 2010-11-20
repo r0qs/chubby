@@ -7,7 +7,6 @@ from pygame.locals import *
 
 class Caracter(pygame.sprite.Sprite):
     x,y = (0,0)
-    # Those variables will need to become global - Diego
     def __init__(self, name, img, frames=1, width=115, height=115, fps=25):
         self.animate = {
 	        'running':self._anim_run,
@@ -120,11 +119,11 @@ class Caracter(pygame.sprite.Sprite):
             self.animation_key = "jumping"
             self.onGround = False
             self.onJump = True
-            self.dy += 4
+            self.ddy += 4
         elif self.onJump:
             if(self.dy > 0):
                 self.forceJump -= 0.3
-                self.dy += self.forceJump
+                self.ddy += self.forceJump
             if self.forceJump <= 0:
                 self.onJump = False
                 
