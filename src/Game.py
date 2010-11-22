@@ -13,7 +13,7 @@ from Command import *
 
 from Caracter import *
 
-def main():
+def game_main():
     pygame.init()
     clock = pygame.time.Clock()
     running = True
@@ -115,4 +115,4 @@ def main():
         pygame.display.flip()
 #        pygame.time.delay(10)
 
-if __name__ == "__main__": main()
+#if __name__ == "__main__": main()
