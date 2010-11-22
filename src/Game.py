@@ -115,4 +115,4 @@ def game_main():
         pygame.display.flip()
 #        pygame.time.delay(10)
 
-#if __name__ == "__main__": main()
+if __name__ == "__main__": game_main()
