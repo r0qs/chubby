@@ -18,9 +18,8 @@ def main():
 	menu_screen = pygame.display.set_mode((width,height))
 	
 	# Background
-	background = pygame.Surface(menu_screen.get_size())
+	background = pygame.image.load(os.path.join('', 'images', 'menu_bg.jpg'))
 	background = background.convert()
-	background.fill((250, 250, 250))
 	
 	# Cursor
 	pygame.mouse.set_visible(False)
