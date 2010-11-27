@@ -13,7 +13,7 @@ def option_function():
 def main():
 
 	width = 1024
-	height = 640
+	height = 768
 	pygame.display.init
 	menu_screen = pygame.display.set_mode((width,height))
 	
@@ -26,7 +26,7 @@ def main():
 	cursor = Cursor(16,16,'images/cursor.png')
 	
 	#Options in menu
-	new_game = Option(200,200,62,62,'images/little.png','images/big.png',new_game_function)
+	new_game = Option(200,200,173,89,'images/little.png','images/big.png',new_game_function, 1.42)
 	
 	# Menu
 	menu = Menu()

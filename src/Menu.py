@@ -108,5 +108,3 @@ class Menu:
 	def activate(self):
 		for option in self.options:
 			option.activate()
-
-

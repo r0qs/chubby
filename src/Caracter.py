@@ -7,7 +7,9 @@ from pygame.locals import *
 
 class Caracter(pygame.sprite.Sprite):
     x,y = (0,0)
+    # Those variables will need to become global - Diego
     def __init__(self, name, img, frames=1, width=115, height=115, fps=25):
+        
         self.animate = {
 	        'running':self._anim_run,
 	        'jumping':self._anim_jump
@@ -17,31 +19,43 @@ class Caracter(pygame.sprite.Sprite):
         
         self.name = name
         self.onGround = True
-        self.onJump = False    
+        self.onJump = False 
+        self.falling = False   
         self.forceJump = 2
+        self.falling_time = 0
         
         self.state = 0
         pygame.sprite.Sprite.__init__(self)
         self._w = width
         self._h = height        #size of caracter frames WxH
         self._y = self.y        #ground level
-        self.dx = 4             #distance per frame (velocity) covered in x
+        self.dx = 1             #distance per frame (velocity) covered in x
         self.dy = 0             #distance per frame (velocity) covered in y
         self.ddx = 0		#acceleration on the x speed
         self.ddy = 0		#acceleration on the y speed
-        self.real_x = 200     # real x position (related to the start of the level)
-        self.real_y = self.y     # real y position (related to the start of the level)
-        self.screen = pygame.display.get_surface().get_rect()
+        self.real_x = 0     # real x position (related to the start of the level)
+        self.real_y = 0     # real y position (related to the start of the level)
         self._framelist = getFrameList(img, self._w, self._h)
         self.image = self._framelist[0]
-        self.rect = self.image.get_rect()
+        self.rect = Rect(self.image.get_rect())
+        self.mask = pygame.mask.from_surface(self.image)
+        
+        for i in range(0, 115):
+            a = ""
+            for j in range(0, 115):
+                a += str(self.mask.get_at((i,j)))
+            print a
+        print self.mask.angle()
+        
+        
         self._start = pygame.time.get_ticks()
         self._delay = 1000 / fps
         self._last_update = 0
         self._frame = 0
-        self.update(pygame.time.get_ticks(), 115, 115, (4, 0))
 
     def set_pos(self, x, y):
+        difference = x - self.x
+        self.real_x += difference
         self.x = x
         self.y = y
 
@@ -59,10 +73,28 @@ class Caracter(pygame.sprite.Sprite):
         
         #real position (according to the init of the level)
         self.real_x += self.dx
-        #print self.real_x
+        
+        self.rect = Rect(self.real_x, self.y, self._w, self._h)
+        #print "Real  ", self.rect
+        #print "Relative", self.get_pos()
         
         #emulate gravity
         self.ddy = -0.15
+        
+        #adds falling time
+        if self.falling:
+            self.falling_time += 1
+        
+        #test if tha fat guy is in his jump apex
+        if self.onGround == False:
+        	if self.dy == 0 or \
+        	self.dy - self.ddy > 0 and self.dy < 0:
+        	    print self.falling_time
+        	    self.falling = True
+        	        
+        #Changes sprite case its falling too high
+        if self.falling_time > 55:
+            print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOWWWW"
         # animation
         self.animate[self.animation_key](t)
 
@@ -81,26 +113,13 @@ class Caracter(pygame.sprite.Sprite):
         ac = 0
         while ac < len(objects_list):
 
-            if (self.real_x + self._w) >= objects_list[ac][0] and self.real_x <= objects_list[ac][0] + objects_list[ac][2] \
-            and self.y + self._h >= objects_list[ac][1]:
-            
-                try:
-                    if (self.y + self._h) > objects_list[ac + 1][1] + 1 and self.y < objects_list[ac + 1][1] + objects_list[ac + 1][3] \
-                    and self.real_x + self._w > objects_list[ac + 1][0] and self.real_x < objects_list[ac + 1][0] + objects_list[ac + 1][2]:
-                    
-                        return objects_list[ac + 1], 2
-                        
-                except IndexError:
-                    return objects_list[ac], 1
+            if self.rect.colliderect(Rect(objects_list[ac])):
                 return objects_list[ac], 1
-                
-            if (self.y + self._h) > objects_list[ac][1] + 1 and self.y < objects_list[ac][1] + objects_list[ac][3] \
-            and self.real_x + self._w > objects_list[ac][0] and self.real_x < objects_list[ac][0] + objects_list[ac][2]:
-            
-                return objects_list[ac], 2
             ac += 1
         
         return -1, -1
+
+
 
     def put_on_ground_running(self, ground_y):
         self.dy = 0
@@ -109,6 +128,8 @@ class Caracter(pygame.sprite.Sprite):
         self.y = ground_y - self._h
         self.forceJump = 2
         self.onGround = True
+        self.falling = False
+        self.falling_time = 0
         self.onJump = False
 
     #FIXME:
@@ -119,14 +140,8 @@ class Caracter(pygame.sprite.Sprite):
             self.animation_key = "jumping"
             self.onGround = False
             self.onJump = True
-            self.ddy += 4
-        elif self.onJump:
-            if(self.dy > 0):
-                self.forceJump -= 0.3
-                self.ddy += self.forceJump
-            if self.forceJump <= 0:
-                self.onJump = False
-                
+            self.dy = 8
+            self.ddy = -0.05
             
 #    def doRoll():
 #    def doSprint():

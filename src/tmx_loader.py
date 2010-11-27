@@ -25,6 +25,7 @@ import base64
 import gzip
 import StringIO
 from Caracter import *
+from Obstacle import *
 import os.path
 import copy
 from pygame.locals import *
@@ -851,7 +852,7 @@ def get_killer_objects(world_map):
     for g in world_map.object_groups:
         if g.name == "killer":
             for obj in g.objects:
-                killer.append((obj.x, obj.y, obj.width, obj.height))
+                killer.append(Obstacle((obj.x, obj.y, obj.width, obj.height)))
     return killer
 
 #-------------------------------------------------------------------------------
