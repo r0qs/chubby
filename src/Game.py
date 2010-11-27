@@ -31,9 +31,9 @@ def main():
     img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
     fatguy = Caracter("jonatas", img_fatguy, 10, 115, 115, 25)
     commandHandler = CommandHandler(fatguy)
-    cam_speed  = (1,0)
+    cam_speed  = (5,0)
     
-    #fatguy.set_pos(204,200)
+    fatguy.set_pos(200,525)
     
     
     world_map = TileMapParser().parse_decode("huge_objects.tmx")
@@ -41,7 +41,6 @@ def main():
     
     ground_objects = get_ground_objects(world_map)
     killer_objects = get_killer_objects(world_map)
-    print killer_objects[0].rect
     slices = set_slices(world_map, SLICE_SIZE, SLICE_SIZE_PIXEL)
 
     key_timeout = -1
@@ -54,7 +53,6 @@ def main():
     enemyGroup = pygame.sprite.Group()
     sceneGroup = pygame.sprite.Group()
 
-    pygame.key.set_repeat(REPEAT_DELAY, REPEAT_DELAY)
     
     offset = 0
     actual_slice = slices.pop(0)
@@ -65,7 +63,6 @@ def main():
         
         ob = ground_objects[0]
         if ob[0] + ob[2] <= fatguy.real_x:
-        	print 'POP!'
         	ground_objects.pop(0)
         
         #blit level----------------------------------------------------------------------------------
@@ -91,10 +88,8 @@ def main():
         screen.blit(fatguy.image,  fatguy.get_pos())
         obj, col_type = fatguy.collides_with_objects(killer_objects)
         if col_type == 1:
-            print 'hit'
             if pygame.sprite.collide_mask(fatguy, obj):
-                print fatguy.rect, obj.rect
-                running = False
+                fatguy.stop()
             
         fatguy.update(pygame.time.get_ticks(), SCREEN_WIDTH, SCREEN_HEIGHT, cam_speed)
         
@@ -107,7 +102,10 @@ def main():
             if (pygame.time.get_ticks() - key_timeout) > KEY_TIMEOUT:
                 commandHandler.actual_state = 0
                 key_timeout = -1
-
+        if fatguy.sprinting:
+            cam_speed = (9.5, 0)
+        else:
+            cam_speed = (5,0)
         for e in pygame.event.get():
             if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
                 running = False

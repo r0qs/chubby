@@ -26,7 +26,11 @@ class CommandHandler(object):
 
         self.actual_state = self._automata_transitions[input_code][self.actual_state]
 
-        if self.actual_state == 5: self.caracter.doRoll()
+        if self.actual_state == 5:
+            if self.caracter.onGround == False: 
+                self.caracter.pendingRoll = True    
+            else:
+                self.caracter.doRoll()
         elif self.actual_state == 8: self.caracter.doSprint()
         elif self.actual_state == 10: self.caracter.doGetDown()
         elif self.actual_state == 11: self.caracter.doJump()

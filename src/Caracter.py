@@ -19,8 +19,10 @@ class Caracter(pygame.sprite.Sprite):
         
         self.name = name
         self.onGround = True
-        self.onJump = False 
-        self.falling = False   
+        self.sprinting = False
+        self.pendingRoll = False
+        self.falling = False
+        self.tooHigh = False   
         self.forceJump = 2
         self.falling_time = 0
         
@@ -29,7 +31,7 @@ class Caracter(pygame.sprite.Sprite):
         self._w = width
         self._h = height        #size of caracter frames WxH
         self._y = self.y        #ground level
-        self.dx = 1             #distance per frame (velocity) covered in x
+        self.dx = 5             #distance per frame (velocity) covered in x
         self.dy = 0             #distance per frame (velocity) covered in y
         self.ddx = 0		#acceleration on the x speed
         self.ddy = 0		#acceleration on the y speed
@@ -39,13 +41,6 @@ class Caracter(pygame.sprite.Sprite):
         self.image = self._framelist[0]
         self.rect = Rect(self.image.get_rect())
         self.mask = pygame.mask.from_surface(self.image)
-        
-        for i in range(0, 115):
-            a = ""
-            for j in range(0, 115):
-                a += str(self.mask.get_at((i,j)))
-            print a
-        print self.mask.angle()
         
         
         self._start = pygame.time.get_ticks()
@@ -94,11 +89,18 @@ class Caracter(pygame.sprite.Sprite):
         	        
         #Changes sprite case its falling too high
         if self.falling_time > 55:
-            print "OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOWWWW"
+            self.tooHigh = True
+            
+        #stop sprinting or getting down
+        if self.state == 0:
+            self.sprinting = False
+            self.dx = 5
+        
         # animation
         self.animate[self.animation_key](t)
 
     def stop(self):
+    	self.ddx = 0
         self.dx = 0
     
     
@@ -110,13 +112,10 @@ class Caracter(pygame.sprite.Sprite):
     # obj, 1: if the sprite collides with the object from the top
     # obj, 2: if the sprite collides with the object from the left
     def collides_with_objects(self, objects_list):
-        ac = 0
-        while ac < len(objects_list):
+        for obj in objects_list:
 
-            if self.rect.colliderect(Rect(objects_list[ac])):
-                return objects_list[ac], 1
-            ac += 1
-        
+            if self.rect.colliderect(Rect(obj)):
+                return obj, 1
         return -1, -1
 
 
@@ -131,6 +130,14 @@ class Caracter(pygame.sprite.Sprite):
         self.falling = False
         self.falling_time = 0
         self.onJump = False
+        if self.tooHigh:
+            self.tooHigh = False
+            if self.pendingRoll == False:
+                #quebrou as pernas
+                self.stop()
+        if self.pendingRoll:
+            self.doRoll()
+            self.pendingRoll = False
 
     #FIXME:
     # The jump sucks... but i will fix this - Diego
@@ -139,11 +146,20 @@ class Caracter(pygame.sprite.Sprite):
         if self.onGround:
             self.animation_key = "jumping"
             self.onGround = False
-            self.onJump = True
             self.dy = 8
             self.ddy = -0.05
             
-#    def doRoll():
+    def doRoll(self):
+        if self.onGround:
+            print 'ROLLLLLLLLLLLLLLLL!'
+            #self.animation_key = "rolling"
+    
+    def doSprint(self):
+        if self.onGround and not self.sprinting:
+            self.sprinting = True
+            self.dx *= 2
+            #self.animation_key = "rolling"
+            
 #    def doSprint():
 #    def doGetDown():
 #    def doClimb():
