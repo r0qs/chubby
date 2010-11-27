@@ -27,7 +27,7 @@ def main():
 	
 	#Options in menu
 	new_game = Option(200,200,173,89,'images/little.png','images/big.png',new_game_function, 1.42)
-	
+
 	# Menu
 	menu = Menu()
 	menu.append(new_game)
