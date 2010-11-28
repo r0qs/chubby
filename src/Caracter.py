@@ -12,11 +12,14 @@ class Caracter(pygame.sprite.Sprite):
         
         self.animate = {
 	        'running':self._anim_run,
-	        'jumping':self._anim_jump
+	        'jumping':self._anim_jump,
+	        'sprinting':self._anim_sprint,
+	        'getting_down':self._anim_get_down
 	}
 	    
         self.animation_key = "running"
         
+        self.sprint_timeout = 0
         self.name = name
         self.onGround = True
         self.sprinting = False
@@ -31,7 +34,7 @@ class Caracter(pygame.sprite.Sprite):
         self._w = width
         self._h = height        #size of caracter frames WxH
         self._y = self.y        #ground level
-        self.dx = 5             #distance per frame (velocity) covered in x
+        self.dx = 6             #distance per frame (velocity) covered in x
         self.dy = 0             #distance per frame (velocity) covered in y
         self.ddx = 0		#acceleration on the x speed
         self.ddy = 0		#acceleration on the y speed
@@ -61,6 +64,7 @@ class Caracter(pygame.sprite.Sprite):
         #velocity
         self.dx += self.ddx
         self.dy += self.ddy
+        if self.dx < 0: self.dx = 0
         
         # postion
         self.x += self.dx - cam_speed[0]
@@ -80,7 +84,6 @@ class Caracter(pygame.sprite.Sprite):
         if self.falling:
             self.falling_time += 1
         
-        #test if tha fat guy is in his jump apex
         if self.onGround == False:
         	if self.dy == 0 or \
         	self.dy - self.ddy > 0 and self.dy < 0:
@@ -91,10 +94,15 @@ class Caracter(pygame.sprite.Sprite):
         if self.falling_time > 55:
             self.tooHigh = True
             
-        #stop sprinting or getting down
-        if self.state == 0:
+        #count sprinting time
+        if self.sprint_timeout <= 0 and self.sprinting:
             self.sprinting = False
-            self.dx = 5
+            print 'stoooop'
+            self.animation_key = "running"
+        elif self.sprinting:
+            time_passed = t - self._last_update
+            print self.sprint_timeout
+            self.sprint_timeout -= time_passed
         
         # animation
         self.animate[self.animation_key](t)
@@ -123,13 +131,14 @@ class Caracter(pygame.sprite.Sprite):
     def put_on_ground_running(self, ground_y):
         self.dy = 0
         self.ddy = 0
-        self.animation_key = "running"
+        #self.animation_key = "running"
         self.y = ground_y - self._h
         self.forceJump = 2
-        self.onGround = True
+        if not self.onGround:
+            self.onGround = True
+            self.animation_key = "running"
         self.falling = False
         self.falling_time = 0
-        self.onJump = False
         if self.tooHigh:
             self.tooHigh = False
             if self.pendingRoll == False:
@@ -139,8 +148,6 @@ class Caracter(pygame.sprite.Sprite):
             self.doRoll()
             self.pendingRoll = False
 
-    #FIXME:
-    # The jump sucks... but i will fix this - Diego
     def doJump(self):
 
         if self.onGround:
@@ -148,16 +155,32 @@ class Caracter(pygame.sprite.Sprite):
             self.onGround = False
             self.dy = 8
             self.ddy = -0.05
+    def stopJump(self):
+        if self.dy > 0:
+            self.dy /= 2;
             
     def doRoll(self):
         if self.onGround:
             print 'ROLLLLLLLLLLLLLLLL!'
             #self.animation_key = "rolling"
+            
+    def doGetDown(self):
+        if self.onGround:
+            self.mask = pygame.mask.from_surface(self._framelist[10])
+            self. ddx = -0.02
+            self.animation_key = "getting_down"
+    def stopGetDown(self):
+        if self.onGround:
+            self.mask = pygame.mask.from_surface(self._framelist[0])
+            self. ddx = 0
+            self.animation_key = "running"
     
     def doSprint(self):
-        if self.onGround and not self.sprinting:
+        if self.onGround:
             self.sprinting = True
-            self.dx *= 2
+            self.sprint_timeout = 1500
+            self.animation_key = "sprinting"
+            self.dx += 1
             #self.animation_key = "rolling"
             
 #    def doSprint():
@@ -167,7 +190,16 @@ class Caracter(pygame.sprite.Sprite):
     def _anim_run(self, t):
 	    if t - self._last_update > self._delay:
 	        self._frame += 1
-	        if self._frame >= len(self._framelist):
+	        if self._frame >= 9:
+		    self._frame = 0
+	        if self.onGround:
+		        self.image = self._framelist[self._frame]
+	        self._last_update = t
+	        
+    def _anim_sprint(self, t):
+	    if t - self._last_update > self._delay:
+	        self._frame += 2
+	        if self._frame >= 9:
 		    self._frame = 0
 	        if self.onGround:
 		    self.image = self._framelist[self._frame]
@@ -176,8 +208,14 @@ class Caracter(pygame.sprite.Sprite):
 		    self.dy = 1
 		    self.onGround = True
 	        self._last_update = t
+	        
     def _anim_jump(self, t):
 	    self.image = self._framelist[7]
+	    self._frame = 7
+	    self._last_update = t
+	    
+    def _anim_get_down(self, t):
+	    self.image = self._framelist[10]
 	    self._frame = 7
 	    self._last_update = t
     

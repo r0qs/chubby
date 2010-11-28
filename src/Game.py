@@ -20,20 +20,25 @@ def main():
     running = True
 
     #Constantes
+    FASE_TIMEOUT = 12500
     SLICE_SIZE_PIXEL = 5120
     SLICE_SIZE = 80
     REPEAT_DELAY = 50 #milisseconds between each KEYDOWN event (when repeating)
     KEY_TIMEOUT = 185 #MAX milisseconds between key pressings
     SCREEN_WIDTH, SCREEN_HEIGHT = (1024,  768)
-
+    
+    fase_timeout = FASE_TIMEOUT
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Good Intentions")
+    font = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 80)
+    pygame.mixer.music.load(os.path.join('', 'sounds', 'beep.mp3'))
+    time_display = pygame.image.load(os.path.join('', 'images', 'display.png'))
     img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
     fatguy = Caracter("jonatas", img_fatguy, 10, 115, 115, 25)
     commandHandler = CommandHandler(fatguy)
-    cam_speed  = (5,0)
+    cam_speed  = (6,0)
     
-    fatguy.set_pos(200,525)
+    fatguy.set_pos(300,525)
     
     
     world_map = TileMapParser().parse_decode("huge_objects.tmx")
@@ -56,11 +61,12 @@ def main():
     
     offset = 0
     actual_slice = slices.pop(0)
+    secs = int((fase_timeout) / 1000)
     past_slice = actual_slice
     transition = False
     while running:
+
         clock.tick(90)
-        
         ob = ground_objects[0]
         if ob[0] + ob[2] <= fatguy.real_x:
         	ground_objects.pop(0)
@@ -84,11 +90,26 @@ def main():
             transition = True
         #----------------------------------------------------------------------------------------------
 	    
+	    #bliting time left
+        secs_before = secs
+        secs = int((fase_timeout - pygame.time.get_ticks()) / 1000)
+        decs = int(((fase_timeout -pygame.time.get_ticks()) % 1000) / 10)
+        
+        if secs < 10:
+            if secs_before > secs:
+                pygame.mixer.music.play(0, 0)
+            timeup_text = font.render('0' + str(secs) + ':' + str(decs), 1, (200,5,15))
+        else:
+            timeup_text = font.render(str(secs) + ':' + str(decs), 1, (160,200,180))
+        screen.blit(time_display, (730,-3))
+        screen.blit(timeup_text, Rect(785, 7, 300, 90))
+        
 	    
         screen.blit(fatguy.image,  fatguy.get_pos())
         obj, col_type = fatguy.collides_with_objects(killer_objects)
         if col_type == 1:
             if pygame.sprite.collide_mask(fatguy, obj):
+                print fatguy.mask.overlap(obj.mask, (0,0))
                 fatguy.stop()
             
         fatguy.update(pygame.time.get_ticks(), SCREEN_WIDTH, SCREEN_HEIGHT, cam_speed)
@@ -102,10 +123,14 @@ def main():
             if (pygame.time.get_ticks() - key_timeout) > KEY_TIMEOUT:
                 commandHandler.actual_state = 0
                 key_timeout = -1
+        adjust = 0
         if fatguy.sprinting:
-            cam_speed = (9.5, 0)
+            adjust = -2
+        if fatguy.x > 150:
+            adjust += 1
         else:
-            cam_speed = (5,0)
+            adjust = 0
+        cam_speed = (fatguy.dx + adjust,0)
         for e in pygame.event.get():
             if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
                 running = False
@@ -113,13 +138,14 @@ def main():
                 key_timeout = pygame.time.get_ticks()
                 fatguy.state = commandHandler.refresh_state(e.key)
             elif e.type == KEYUP:
-                if fatguy.dy > 0: fatguy.dy /= 2;
+            	if e.key == K_UP:
+                    fatguy.stopJump()
+                if e.key == K_DOWN:
+                    fatguy.stopGetDown()
             if not fatguy.alive():
                 print 'Game Over'
                 pygame.time.wait(2000)
                 sys.exit()
-            
-
 #        pygame.display.update()
         pygame.display.flip()
 #        pygame.time.delay(10)

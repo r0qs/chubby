@@ -3,51 +3,72 @@
  <tileset firstgid="1" name="proto06" tilewidth="64" tileheight="64">
   <image source="tilesets/proto06.png"/>
  </tileset>
- <tileset firstgid="257" name="crate" tilewidth="64" tileheight="64">
-  <image source="tilesets/crate.png"/>
+ <tileset firstgid="257" name="obj" tilewidth="64" tileheight="64">
+  <image source="tilesets/obj.png"/>
  </tileset>
  <layer name="sky" width="320" height="12">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3DRw0AMAwEsHw7GDT8cYZHz5bcVdWqqqqq6pevauinqmrUoxp6q4ZeqqEBAMgyWhg+QwA8AAA=
+   H4sIAAAAAAAAA+3OyxFAQAAFwb37bQKIWnBIhgiUi3V4PVV9n1pKqQCBVgAAokwAoRaAUCNAqBkg1AAQqgcI1QGEklq1344H539rkvRp2wtSyy7ox9GVADwAAA==
   </data>
  </layer>
- <layer name="postes" width="320" height="12">
+ <layer name="postes" width="320" height="12" visible="0">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3OQRGAMAxE0dhpHYCDSqgE/BuACxIyycB7M3v+GwEAAAAAAPBN57NZtKGtra1d0H4dUUdbW1u7sr1SX2hra2v3be/UF9ra2tp921fqC21tbe1/tQEA6OcGC7NeggA8AAA=
   </data>
  </layer>
- <layer name="carros" width="320" height="12">
+ <layer name="carros" width="320" height="12" visible="0">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3Rxw3CQBCGURogNEBogNAAoQFCA4T+q+A/c0Bry8KL9Z703UbyeGc0AgAAAAAAAAAAAP7VOV3SNd163mUoan3TddqkbdoVzI/TJE3T7MtcDf9buuunGnZvepem2r5Nqa727+MW9/RIz/T60TeHrtY33adDOqZTwfw8LdIyrb7M1fC/pbt+qmH3pndpqu3blOpq/xpuAQDAML0BOY0PcAA8AAA=
   </data>
  </layer>
  <layer name="obstacles" width="320" height="12">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3UIRIAIAwDQQr8/81QwSCRFeya2KhrDQAAAAAAAADeIqofANTI/nUNBD6U7TsN1EHgJ2M3b8ZdAAAAqLAAjRImJQA8AAA=
+   H4sIAAAAAAAAA+3WOQ6EMAwFUIygYJb7Xxco0IgCK0jD/l6TwnbkJl+pKgAAAAAA4Coijt4A4Bi1/AMeaPz71SEDgXuJglybekp699Ike7QLtWwmmwPWe2/0nv51b2mudUPtFb/zDD7JHt+FWjaTzQEAAABzPckOqNQAPAAA
+  </data>
+ </layer>
+ <layer name="tunel" width="320" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3OuQ2AQADAsFsPJuZnNbIEgsKW0mcMAAAAAAAA+Ke5llprq72OOuuqu6bP7gAAAAAAAAAA3vEA10mOuQA8AAA=
   </data>
  </layer>
  <layer name="chao" width="320" height="12">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3YSUoDQRhA4XKMW+dsnb2Ws5iVs5ideALxAk4HUPR+vtD0JosiCV2VIrwP3qL5aahqelMVgiRJkiRJkiRJkiRJ6T3RAR3SER3TCZ3SGZ03MH/OthtJGtwLXdIVXdMN3dId3dNDA/PXbLuRpMG900fiPrPtRlJJpmiaZmiW5mieWrQwpvlFqM6r3/RDX4n7pb9QnYc7Bex/kucxJaxvmP+z/14l9twpaP0556O+W3/jVHde9XyRlmiZVmiV1mid2mOaP4bqvPqWud55uFvA/id5HlPC+ob5P/vvVWLP3YLWn3M+6rv1N05151XPN2iTtmibdmiX9mjfufOG5zElrM95s/OS19ab/wP+YOx+ADwAAA==
+   H4sIAAAAAAAAA+2ayU7jQBRFH/OwA5pxRzM0LJsZ/oaxEVmFqVvNDrGALWIBSyaJGTF9ACiIT+AT+AS23FJcwilsF5gYm+he6cixXzmpqkhX71WVCFUoegAZcBVAd2y9oyiKik6P8upz+5Lre3dC/6MoqnD1JG/zvW15X/5XDYpBCSgFZaAcVIBK43NVZCMIp2UwCqbAHzANVmLtEUVRX61nyXrcrvj7oJ//tYBaUAd+gHrQABpBk/G5ObIRhNM6SINF8Bf8Axux9oiiqK/WCDgAh+AIHIMTcArOwDkY9nlX5Y5mruiFqquTVkPvSG7Nr9ZA92LtEUVRUSioTnU/D6plvZ6tyluv89tLSaL/ae/TuS/9j6IKT7Y6NWxsU4I9L+n+5/Y+5n8U9T1l24fQeZq5xhdUu7rrQpu3mXitJSbR/3Q/9VjpfxT1/WTL73Se9hnes87n9k7TA6PyP+X9RRLs/zo+A8bABbh0cMevwY1k94VTHu/bvp/xj8f1fzIOJsCk5O7JjzrY2kQZN++TOJ96HvM9F7b26pqKefwqvzPP7n3GxzLGNWhtz+t3vdqthRyf7dyM8v4aCfZ/Hf8PZsGtZM823jn9zzjzoq73kt0XXvJ43/b9jH88rv+TOTAPFiR3Tz7tYGsTZdy8T+J86nnM91zY2qvrUszj98vvvOrQuNgKOT7buRm1B90KfoI20A46QCf4BboYZzzP8aT1h/HCjdvqZnV+8TfoAb2gD/SDATAIhhhnPM/xFyHihDkAPAAA
+  </data>
+ </layer>
+ <layer name="Camada de Tiles 7" width="320" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3UIQ4AIBADwTsDKOD/r4Ug8QQzk6yvagQAAAAAAAAAAAC/lIyoVy1/rwJ4r++vG1fT/wEAAAAcC1wGNJMAPAAA
   </data>
  </layer>
  <objectgroup color="#0000ff" name="ground" width="320" height="12">
-  <object name="" x="0" y="640" width="2727" height="7"/>
-  <object name="" x="2572" y="448" width="1643" height="10"/>
-  <object name="" x="4224" y="640" width="5756" height="17"/>
-  <object name="" x="10432" y="640" width="10045" height="20"/>
+  <object name="" x="0" y="640" width="2568" height="6"/>
+  <object name="" x="2556" y="640" width="1678" height="11"/>
+  <object name="" x="4224" y="640" width="2188" height="8"/>
+  <object name="" x="10441" y="575" width="4609" height="11"/>
+  <object name="" x="6471" y="510" width="455" height="13"/>
+  <object name="" x="6978" y="383" width="1368" height="9"/>
+  <object name="" x="8367" y="193" width="699" height="12"/>
+  <object name="" x="9078" y="638" width="889" height="9"/>
+  <object name="" x="15292" y="574" width="5189" height="21"/>
  </objectgroup>
  <objectgroup color="#ff0000" name="killer" width="320" height="12">
-  <object name="" x="5577" y="583" width="239" height="42"/>
-  <object name="" x="5671" y="551" width="74" height="10"/>
-  <object name="" x="5779" y="570" width="32" height="9"/>
-  <object name="" x="5647" y="565" width="128" height="14"/>
-  <object name="" x="2570" y="454" width="6" height="25"/>
-  <object name="terc" x="2573" y="476" width="7" height="38"/>
-  <object name="" x="2563" y="511" width="9" height="138"/>
-  <object name="" x="10430" y="651" width="7" height="116"/>
-  <object name="" x="1536" y="388" width="61" height="57"/>
-  <object name="" x="1536" y="448" width="127" height="64"/>
-  <object name="" x="1536" y="513" width="251" height="15"/>
+  <object name="" x="10444" y="591" width="9" height="171"/>
+  <object name="" x="7370" y="-1" width="59" height="324"/>
+  <object name="" x="6408" y="507" width="8" height="140"/>
+  <object name="" x="6922" y="396" width="11" height="113"/>
+  <object name="" x="8330" y="202" width="7" height="174"/>
+  <object name="" x="11337" y="198" width="369" height="304"/>
+  <object name="" x="12508" y="549" width="11" height="22"/>
+  <object name="" x="13914" y="550" width="12" height="20"/>
+  <object name="" x="15040" y="515" width="255" height="53"/>
+  <object name="" x="15104" y="450" width="127" height="61"/>
+  <object name="" x="15744" y="259" width="61" height="124"/>
+  <object name="" x="15678" y="386" width="192" height="57"/>
+  <object name="" x="15681" y="448" width="247" height="59"/>
+  <object name="" x="18067" y="485" width="27" height="86"/>
+  <object name="" x="18522" y="482" width="27" height="93"/>
+  <object name="" x="18899" y="486" width="26" height="86"/>
+  <object name="" x="19422" y="483" width="23" height="88"/>
  </objectgroup>
 </map>
