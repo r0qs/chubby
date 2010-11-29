@@ -24,6 +24,7 @@ class Caracter(pygame.sprite.Sprite):
         self.onGround = True
         self.sprinting = False
         self.pendingRoll = False
+        self.pendingGetDown = False
         self.falling = False
         self.tooHigh = False   
         self.forceJump = 2
@@ -87,7 +88,6 @@ class Caracter(pygame.sprite.Sprite):
         if self.onGround == False:
         	if self.dy == 0 or \
         	self.dy - self.ddy > 0 and self.dy < 0:
-        	    print self.falling_time
         	    self.falling = True
         	        
         #Changes sprite case its falling too high
@@ -101,7 +101,7 @@ class Caracter(pygame.sprite.Sprite):
             self.animation_key = "running"
         elif self.sprinting:
             time_passed = t - self._last_update
-            print self.sprint_timeout
+
             self.sprint_timeout -= time_passed
         
         # animation
@@ -147,6 +147,9 @@ class Caracter(pygame.sprite.Sprite):
         if self.pendingRoll:
             self.doRoll()
             self.pendingRoll = False
+        if self.pendingGetDown:
+            self.doGetDown()
+            self.pendingGetDown = False
 
     def doJump(self):
 
@@ -166,8 +169,10 @@ class Caracter(pygame.sprite.Sprite):
             
     def doGetDown(self):
         if self.onGround:
+            self.sprinting = False
+            self.sprint_timeout = 0
             self.mask = pygame.mask.from_surface(self._framelist[10])
-            self. ddx = -0.02
+            self. ddx = -0.04
             self.animation_key = "getting_down"
     def stopGetDown(self):
         if self.onGround:
@@ -178,7 +183,7 @@ class Caracter(pygame.sprite.Sprite):
     def doSprint(self):
         if self.onGround:
             self.sprinting = True
-            self.sprint_timeout = 1500
+            self.sprint_timeout = 2500
             self.animation_key = "sprinting"
             self.dx += 1
             #self.animation_key = "rolling"

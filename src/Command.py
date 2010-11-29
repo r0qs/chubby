@@ -4,12 +4,12 @@ from Caracter import Caracter
 class CommandHandler(object):
 
                             #0  1  2  3  4  5  6  7  8  9  10 11 12 13
-    _automata_transitions= [[11,0, 0, 4, 0, 0, 0, 0, 0, 11,0, 11,13,0],#up
-                            [9, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12,0, 0],#down
-                            [0, 6, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],#left
+    _automata_transitions= [[11,11,0, 4, 0, 0, 11,11,0, 11,0, 11,13,0],#up
+                            [9, 2, 0, 0, 0, 0, 9, 9, 0, 0, 0, 12,0, 0],#down
+                            [0, 6, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#left
                             [1, 0, 0, 0, 5, 0, 7, 0, 0, 0, 0, 0, 0, 0]]#right
     # The final states
-    final_list = [5,8,10,11,13]
+    final_list = [5,7,9,11,13]
     final_state = 0
 
     def __init__(self, caracter):
@@ -32,7 +32,11 @@ class CommandHandler(object):
             else:
                 self.caracter.doRoll()
         elif self.actual_state == 7: self.caracter.doSprint()
-        elif self.actual_state == 9: self.caracter.doGetDown()
+        elif self.actual_state == 9:
+            if self.caracter.onGround == False: 
+                self.caracter.pendingGetDown = True    
+            else:
+                self.caracter.doGetDown()
         elif self.actual_state == 11: self.caracter.doJump()
         elif self.actual_state == 13: self.caracter.doClimb()
         #print "estado atual:" + str(self.actual_state)

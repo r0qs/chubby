@@ -20,17 +20,19 @@ def main():
     running = True
 
     #Constantes
-    FASE_TIMEOUT = 12500
+    FASE_TIMEOUT = 40000
     SLICE_SIZE_PIXEL = 5120
     SLICE_SIZE = 80
     REPEAT_DELAY = 50 #milisseconds between each KEYDOWN event (when repeating)
-    KEY_TIMEOUT = 185 #MAX milisseconds between key pressings
+    KEY_TIMEOUT = 230 #MAX milisseconds between key pressings
     SCREEN_WIDTH, SCREEN_HEIGHT = (1024,  768)
     
     fase_timeout = FASE_TIMEOUT
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Good Intentions")
     font = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 80)
+    font_small = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 35)
+    km_label_text = font_small.render('Km/h', 1, (15,15,215))
     pygame.mixer.music.load(os.path.join('', 'sounds', 'beep.mp3'))
     time_display = pygame.image.load(os.path.join('', 'images', 'display.png'))
     img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
@@ -38,7 +40,7 @@ def main():
     commandHandler = CommandHandler(fatguy)
     cam_speed  = (6,0)
     
-    fatguy.set_pos(300,525)
+    fatguy.set_pos(150,525)
     
     
     world_map = TileMapParser().parse_decode("huge_objects.tmx")
@@ -90,7 +92,7 @@ def main():
             transition = True
         #----------------------------------------------------------------------------------------------
 	    
-	    #bliting time left
+	#bliting HUD
         secs_before = secs
         secs = int((fase_timeout - pygame.time.get_ticks()) / 1000)
         decs = int(((fase_timeout -pygame.time.get_ticks()) % 1000) / 10)
@@ -104,12 +106,17 @@ def main():
         screen.blit(time_display, (730,-3))
         screen.blit(timeup_text, Rect(785, 7, 300, 90))
         
+        speed_m_per_s = float(fatguy.dx / 64.0) * 100
+        speed_km_per_h = int(speed_m_per_s * 3.6)
+        speed_text = font.render(str(speed_km_per_h), 1, (15,15,215))
+        screen.blit(speed_text, Rect(765, 680, 300, 90))
+        screen.blit(km_label_text, Rect(865, 690, 300, 90))
+        #-------------------------------------------------------------------------------
 	    
         screen.blit(fatguy.image,  fatguy.get_pos())
         obj, col_type = fatguy.collides_with_objects(killer_objects)
         if col_type == 1:
             if pygame.sprite.collide_mask(fatguy, obj):
-                print fatguy.mask.overlap(obj.mask, (0,0))
                 fatguy.stop()
             
         fatguy.update(pygame.time.get_ticks(), SCREEN_WIDTH, SCREEN_HEIGHT, cam_speed)
@@ -125,9 +132,9 @@ def main():
                 key_timeout = -1
         adjust = 0
         if fatguy.sprinting:
-            adjust = -2
-        if fatguy.x > 150:
-            adjust += 1
+            adjust = -4
+        if fatguy.x > 100:
+            adjust += 2
         else:
             adjust = 0
         cam_speed = (fatguy.dx + adjust,0)
@@ -141,7 +148,9 @@ def main():
             	if e.key == K_UP:
                     fatguy.stopJump()
                 if e.key == K_DOWN:
-                    fatguy.stopGetDown()
+                    if not fatguy.onGround:
+                        fatguy.pendingGetDown = False
+                    else: fatguy.stopGetDown()
             if not fatguy.alive():
                 print 'Game Over'
                 pygame.time.wait(2000)
