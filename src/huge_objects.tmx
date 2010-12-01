@@ -53,8 +53,6 @@
   <object name="" x="15292" y="574" width="5178" height="24"/>
  </objectgroup>
  <objectgroup color="#ff0000" name="killer" width="320" height="12">
-  
-  
   <object name="" x="6408" y="547" width="9" height="93"/>
   <object name="" x="6923" y="424" width="11" height="89"/>
   <object name="" x="7370" y="-1" width="578" height="314"/>
@@ -74,9 +72,9 @@
   <object name="" x="19422" y="483" width="23" height="88"/>
  </objectgroup>
  <objectgroup color="#ffff00" name="checkpoint" width="320" height="12">
-  <object name="" x="1116" y="172" width="28" height="456"/>
-  <object name="" x="8581" y="3" width="59" height="377"/>
+  <object name="" x="1152" y="64" width="64" height="576"/>
+  <object name="" x="8576" y="0" width="64" height="192"/>
   <object name="" x="14081" y="1" width="61" height="572"/>
-  <object name="" x="20289" y="515" width="20" height="84"/>
+  <object name="" x="20288" y="487" width="64" height="84"/>
  </objectgroup>
 </map>

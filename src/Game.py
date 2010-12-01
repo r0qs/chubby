@@ -25,14 +25,16 @@ REPEAT_DELAY = 50
 KEY_TIMEOUT = 230 
 # Screen resolution
 SCREEN_WIDTH, SCREEN_HEIGHT = (1024,  768)
+# Delay to reset a stage
 RESET_DELAY = 50
 
 # Main Class of the game
 class Game:
 
-    def __init__(self,stage_path,fase_timeout=40000, fatguy_x=150, fatguy_y=525):
+    def __init__(self,stage_path,fase_timeout, fatguy_x=150, fatguy_y=525):
         pygame.init()
         self.clock = pygame.time.Clock()
+        self.initial_clock = pygame.time.get_ticks()
         self.running = True
         
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -68,10 +70,7 @@ class Game:
         self.killer_objects = get_killer_objects(self.world_map)
         self.checkpoint_objects = get_checkpoint_objects(self.world_map)
         
-        
         self.slices = set_slices(self.world_map, SLICE_SIZE, SLICE_SIZE_PIXEL)
-        self._slices = set_slices(self.world_map,SLICE_SIZE,SLICE_SIZE_PIXEL)
-        
         self.key_timeout = -1
 
         # Create sprites groups for collision detection
@@ -101,15 +100,19 @@ class Game:
             self.draw_background()
             self.draw_hud()
             self.update_fatguy()
+            self.killer_collision()
+            self.ground_collision()
+            self.checkpoint_collision()
             self.draw_fatguy()
             self.event_handler()
-            
-            
-    
+        # Return the position of the Rolando
+        return self.fatguy_x, self.fatguy_y
+
+    # Throw away utilized objects
     def recicle(self):
         g_object = self.ground_objects[0]
         k_object = self.killer_objects[0]
-#        c_object = self.checkpoint_objects[0]
+        c_object = self.checkpoint_objects[0]
         
         if g_object[0] + g_object[2] <= self.fatguy.real_x:
             self.ground_objects.pop(0)
@@ -117,10 +120,10 @@ class Game:
         if k_object.rect.x + k_object.rect.width < self.fatguy.real_x:
             self.killer_objects.pop(0)
             
-#        if c_object[0] + c_object[2] <= self.fatguy.real_x:
-#            self.checkpoint_objects.pop(0)
+        if c_object[0] <= self.fatguy.real_x:
+            self.checkpoint_objects.pop(0)
        
-            
+    # Calcule and Draw the Background  
     def draw_background(self):
         if self.transition:
             join_point = SLICE_SIZE_PIXEL - self.offset
@@ -136,16 +139,17 @@ class Game:
         if(self.offset + SCREEN_WIDTH) > SLICE_SIZE_PIXEL and self.transition == False:
             self.past_slice = self.actual_slice
             if len(self.slices) == 0: 
-                return
+                return None
             self.actual_slice = self.slices.pop(0)
             self.transition = True
         
             
-
+    # Draw the head's up display
     def draw_hud(self):      
         secs_before = self.secs
-        self.secs = int((self.fase_timeout - pygame.time.get_ticks()) / 1000)
-        decs = int(((self.fase_timeout -pygame.time.get_ticks()) % 1000) / 10)
+        time = int(self.fase_timeout - (pygame.time.get_ticks() - self.initial_clock))
+        self.secs = time / 1000
+        decs = ((time % 1000) / 10)
         
         if self.secs < 10:
             if secs_before > self.secs:
@@ -162,52 +166,23 @@ class Game:
         self.screen.blit(speed_text, Rect(765, 680, 300, 90))
         self.screen.blit(self.km_label_text, Rect(865, 690, 300, 90))
             
+    # Draw the fatguy
     def draw_fatguy(self):
         self.screen.blit(self.fatguy.image,  self.fatguy.get_pos())
         
+    # Update the fatguy's variables and change his animation
     def update_fatguy(self):
-        # Collides with Killer Objects
-        obj, col_type = self.fatguy.collides_with_objects(self.killer_objects)
-        if col_type == 1:
-            if not self.dead:
-                if pygame.sprite.collide_mask(self.fatguy, obj):
-                    self.fatguy.doCrashSide(obj.rect.x)
-                    self.fatguy.sprinting = False
-                    self.fatguy.onGround = True
-                    self.dead = True
-                else:
-                    if self.shake_amplitude > 0:
-                        self.shake = (randrange(-self.shake_amplitude,self.shake_amplitude),randrange(-self.shake_amplitude,self.shake_amplitude) + random())
-                        self.shake_amplitude -= 1
-                
-#            if pygame.sprite.collide_mask(self.fatguy, obj):
-#                self.fatguy.stop()
-             
-             
         self.fatguy.update(pygame.time.get_ticks(), SCREEN_WIDTH, SCREEN_HEIGHT, self.cam_speed)
-        
-        # Collides with the ground
-        obj, col_type = self.fatguy.collides_with_objects(self.ground_objects)
-        if  col_type == 1:
-            self.fatguy.put_on_ground_running(obj[1])
-            
-       
-       #check if the Fatguy's too high
-        if self.fatguy.falling and self.ground_objects[0][1] - self.fatguy.apex_height > 335:
-           print self.fatguy.apex_height, self.ground_objects[0][1]
-           self.fatguy.doTooHigh()
-            
-        # Collides with the checkpoint 
-#        check_obj, check_collision = self.fatguy.collides_with_objects(self.checkpoint_objects)
-#        if check_collision == 1:
-#            self.fatguy_x = check_obj[0]
-        
         if self.key_timeout >= 0:
             if (pygame.time.get_ticks() - self.key_timeout) > KEY_TIMEOUT:
                 self.commandHandler.actual_state = 0
                 self.key_timeout = -1
                 
         adjust = 0
+        #check if the Fatguy's too high
+        if self.fatguy.falling and self.ground_objects[0][1] - self.fatguy.apex_height > 335:
+           print self.fatguy.apex_height, self.ground_objects[0][1]
+           self.fatguy.doTooHigh()
         
         if not self.dead:
             if self.fatguy.sprinting:
@@ -220,8 +195,38 @@ class Game:
         else:
             self.reset_delay -= 1
             if self.reset_delay == 0:
-                self.reset()
-                self.reset_delay = RESET_DELAY
+                fade_out(self.screen,self.clock)
+                self.running = False
+        
+    # Collides with Killer Objects
+    def killer_collision(self):
+        obj, col_type = self.fatguy.collides_with_objects(self.killer_objects)
+        if col_type == 1:
+            if not self.dead:
+                if pygame.sprite.collide_mask(self.fatguy, obj):
+                    self.fatguy.doCrashSide(obj.rect.x)
+                    self.fatguy.sprinting = False
+                    self.fatguy.onGround = True
+                    self.dead = True
+            else:
+                if self.shake_amplitude > 0:
+                    self.shake = (randrange(-self.shake_amplitude,self.shake_amplitude),randrange(-self.shake_amplitude,self.shake_amplitude) + random())
+                    self.shake_amplitude -= 1
+                    
+    # Collides with the ground
+    def ground_collision(self):
+        obj, col_type = self.fatguy.collides_with_objects(self.ground_objects)
+        if  col_type == 1:
+            self.fatguy.put_on_ground_running(obj[1])
+            
+    # Collides with the checkpoint 
+    def checkpoint_collision(self):
+        check_obj, check_collision = self.fatguy.collides_with_objects(self.checkpoint_objects)
+        if check_collision == 1:
+            self.fatguy_x = check_obj[0]
+            self.fatguy_y = check_obj[1] + check_obj[3]
+        
+        
             
     def event_handler(self):
         for e in pygame.event.get():
@@ -237,62 +242,36 @@ class Game:
                     if not self.fatguy.onGround:
                         self.fatguy.pendingGetDown = False
                     else: self.fatguy.stopGetDown()
-#            if not self.fatguy.alive():
-#                self.game_over()
-#                pygame.time.wait(2000)
-#                sys.exit()
+            if not self.fatguy.alive():
+                self.game_over()
+                pygame.time.wait(2000)
+                sys.exit()
         pygame.display.flip()
         
         
-    def reset(self):
-        alpha = 0
-        fill_surf = pygame.Surface((1024,768))
-        fill_surf.fill((10,10,10))
-        
-        # Escurece a tela
-        while alpha < 255:
-            self.clock.tick(20)
-            alpha+=10
-            fill_surf.set_alpha(alpha)
-            self.screen.blit(fill_surf, (0,0))
-            pygame.display.flip()
-
-        self.fatguy = Caracter("Rolando", self.img_fatguy, 10, 115, 115, 25)
-        self.fatguy.set_pos(self.fatguy_x,self.fatguy_y)
-        self.commandHandler = CommandHandler(self.fatguy)
-        self.dead = False
-        self.cam_speed  = (6,0)
-        
-        self.offset = 0
-        self.slices = self._slices
-        self.actual_slice = self.slices.pop(0)
-        self.secs = int((self.fase_timeout) / 1000)
-        self.past_slice = self.actual_slice
-        self.transition = False
-
-
-        # Mostra a tela
-        alpha = 254
-        while alpha > 0:
-            self.clock.tick(20)
-            alpha-=35
-            fill_surf.set_alpha(alpha)
-            self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), (0, 0))
-            self.screen.blit(fill_surf, (0,0))
-            pygame.display.flip()
-            
-
-        
-    
     def game_over(self):
         self.fatguy.lifes -= 1
         if self.fatguy.lifes > 0:
             self.fatguy.set_pos(self.fatguy_x,self.fatguy_y)
         
-        
+def fade_out(screen,clock):
+    fill_surf = pygame.Surface((1024,768))
+    fill_surf.fill((10,10,10))
+    alpha = 0
+    while alpha < 255:
+        clock.tick(20)
+        alpha+=10
+        fill_surf.set_alpha(alpha)
+        screen.blit(fill_surf, (0,0))
+        pygame.display.flip()
+    
         
 def game_main():
-    game = Game("huge_objects.tmx")        
+    
+    game = Game("huge_objects.tmx",40000,150,525)        
     game.main_loop()
+    
+    game2 = Game("huge_objects.tmx",40000,150,525)
+    game2.main_loop()
 
 if __name__ == "__main__": game_main()
