@@ -14,7 +14,9 @@ class Caracter(pygame.sprite.Sprite):
 	        'running':self._anim_run,
 	        'jumping':self._anim_jump,
 	        'sprinting':self._anim_sprint,
-	        'getting_down':self._anim_get_down
+	        'crashed_side':self._anim_crash_side,
+	        'getting_down':self._anim_get_down,
+	        'too_high':self._anim_too_high
 	}
 	    
         self.animation_key = "running"
@@ -51,6 +53,8 @@ class Caracter(pygame.sprite.Sprite):
         self._delay = 1000 / fps
         self._last_update = 0
         self._frame = 0
+        
+        self.lifes = 3 # Checkpoint chances (only 3 for while)
 
     def set_pos(self, x, y):
         difference = x - self.x
@@ -92,12 +96,12 @@ class Caracter(pygame.sprite.Sprite):
         	        
         #Changes sprite case its falling too high
         if self.falling_time > 55:
+            self.animation_key = "too_high"
             self.tooHigh = True
             
         #count sprinting time
         if self.sprint_timeout <= 0 and self.sprinting:
             self.sprinting = False
-            print 'stoooop'
             self.animation_key = "running"
         elif self.sprinting:
             time_passed = t - self._last_update
@@ -110,6 +114,8 @@ class Caracter(pygame.sprite.Sprite):
     def stop(self):
     	self.ddx = 0
         self.dx = 0
+        self.ddy = 0
+        self.dy = 0
     
     
     #FIXME: Essa colisao nao esta boa, pq ela esta checando colisao de rect do sprite com os rects dos objetos. 
@@ -186,12 +192,14 @@ class Caracter(pygame.sprite.Sprite):
             self.sprint_timeout = 2500
             self.animation_key = "sprinting"
             self.dx += 1
-            #self.animation_key = "rolling"
-            
-#    def doSprint():
-#    def doGetDown():
-#    def doClimb():
 
+    def doCrashSide(self, object_side):
+        self.stop()
+        print 'X',self.x
+        real_object_side = object_side - self.real_x
+        self.x = real_object_side + self.x - 100 + 32 #32 eh um ajuste para o sprite ficar bem posicionado
+        self.animation_key = "crashed_side"
+            
     def _anim_run(self, t):
 	    if t - self._last_update > self._delay:
 	        self._frame += 1
@@ -223,6 +231,14 @@ class Caracter(pygame.sprite.Sprite):
 	    self.image = self._framelist[10]
 	    self._frame = 7
 	    self._last_update = t
+    def _anim_crash_side(self, t):
+	    self.image = self._framelist[11]
+	    self._frame = 7
+	    self._last_update = t
+    def _anim_too_high(self, t):
+	    self.image = self._framelist[12]
+	    self._frame = 7
+	    self._last_update = t
     
     #def _anim_roll():
     #def _anim_get_down():
@@ -233,9 +249,12 @@ class Caracter(pygame.sprite.Sprite):
 def getFrameList(img, width, height):
         framelist = []
         img_width, img_height = img.get_size()
-        for f in xrange(int(img_width/width)):
-            framelist.append(img.subsurface(Rect(f*width,0,width,height)))
+        for h in xrange(int(img_height/height)):
+            for f in xrange(int(img_width/width)):
+                framelist.append(img.subsurface(Rect(f*width,h*height,width,height)))
+        #print 'number of sprites:', len(framelist)
         return framelist
+        
 
 def getFrame(frameList):
     while True:

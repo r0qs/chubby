@@ -854,6 +854,14 @@ def get_killer_objects(world_map):
             for obj in g.objects:
                 killer.append(Obstacle((obj.x, obj.y, obj.width, obj.height)))
     return killer
+    
+def get_checkpoint_objects(world_map):
+    checkpoint = []
+    for g in world_map.object_groups:
+        if g.name == "checkpoint":
+            for obj in g.objects:
+                checkpoint.append((obj.x, obj.y, obj.width, obj.height))
+    return checkpoint
 
 #-------------------------------------------------------------------------------
 

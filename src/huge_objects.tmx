@@ -48,16 +48,16 @@
   <object name="" x="10494" y="575" width="4609" height="11"/>
   <object name="" x="6471" y="510" width="455" height="13"/>
   <object name="" x="6978" y="383" width="1368" height="9"/>
-  <object name="" x="8411" y="194" width="655" height="12"/>
+  <object name="" x="8384" y="194" width="687" height="12"/>
   <object name="" x="9078" y="638" width="864" height="10"/>
   <object name="" x="15292" y="574" width="5178" height="24"/>
  </objectgroup>
  <objectgroup color="#ff0000" name="killer" width="320" height="12">
   <object name="" x="10444" y="591" width="9" height="171"/>
-  <object name="" x="7370" y="-1" width="614" height="321"/>
-  <object name="" x="6408" y="507" width="8" height="140"/>
-  <object name="" x="6922" y="396" width="11" height="113"/>
-  <object name="" x="8330" y="202" width="7" height="174"/>
+  <object name="" x="7370" y="-1" width="578" height="314"/>
+  <object name="" x="6408" y="547" width="9" height="93"/>
+  <object name="" x="6923" y="424" width="11" height="89"/>
+  <object name="" x="8330" y="233" width="12" height="135"/>
   <object name="" x="11337" y="198" width="369" height="304"/>
   <object name="" x="12508" y="549" width="11" height="22"/>
   <object name="" x="13914" y="550" width="12" height="20"/>
@@ -70,5 +70,11 @@
   <object name="" x="18522" y="482" width="27" height="93"/>
   <object name="" x="18899" y="486" width="26" height="86"/>
   <object name="" x="19422" y="483" width="23" height="88"/>
+ </objectgroup>
+ <objectgroup color="#ffff00" name="checkpoint" width="320" height="12">
+  <object name="" x="1116" y="172" width="28" height="456"/>
+  <object name="" x="8581" y="3" width="59" height="377"/>
+  <object name="" x="14081" y="1" width="61" height="572"/>
+  <object name="" x="20289" y="515" width="20" height="84"/>
  </objectgroup>
 </map>
