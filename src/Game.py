@@ -31,7 +31,7 @@ RESET_DELAY = 50
 # Main Class of the game
 class Game:
 
-    def __init__(self,stage_path,fase_timeout, fatguy_x=150, fatguy_y=525):
+    def __init__(self,stage_path,fase_timeout, fatguy_x, fatguy_y):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.initial_clock = pygame.time.get_ticks()
@@ -52,8 +52,8 @@ class Game:
         
         # Loading Rolando 
         self.fatguy = Caracter("Rolando", self.img_fatguy, 10, 115, 115, 25)
-        self.commandHandler = CommandHandler(self.fatguy)
         self.fatguy.set_pos(fatguy_x,fatguy_y)
+        self.commandHandler = CommandHandler(self.fatguy)
         self.dead = False
         self.fatguy_x = fatguy_x
         self.fatguy_y = fatguy_y
@@ -71,6 +71,7 @@ class Game:
         self.checkpoint_objects = get_checkpoint_objects(self.world_map)
         
         self.slices = set_slices(self.world_map, SLICE_SIZE, SLICE_SIZE_PIXEL)
+        self.initialize_slices()
         self.key_timeout = -1
 
         # Create sprites groups for collision detection
@@ -90,6 +91,30 @@ class Game:
         
         # Controlling the reset
         self.reset_delay = RESET_DELAY
+    
+    # Calcule the first slice of the stage
+    def initialize_slices(self):
+        flag = False
+        x = self.fatguy_x
+        real_x = SLICE_SIZE_PIXEL
+        while(x > SLICE_SIZE_PIXEL):
+            g_object = self.ground_objects[0]
+            k_object = self.killer_objects[0]
+            c_object = self.checkpoint_objects[0]
+            while(g_object[0] + g_object[2] < real_x):
+                self.ground_objects.pop(0)
+                g_object = self.ground_objects[0]
+#            while(k_object[0] + k_object[2] < real_x):
+#                self.killer_objects.pop(0)
+#                k_object = self.killer_objects[0]
+            while(c_object[0] + c_object[2] < real_x):
+                self.checkpoint_objects.pop(0)
+                c_object = self.checkpoint_objects[0]
+            self.slices.pop(0)
+            real_x += SLICE_SIZE_PIXEL
+            x -= SLICE_SIZE_PIXEL
+            flag = True
+        self.offset = x 
 
     # The main function of the class
     def main_loop(self):
@@ -226,7 +251,7 @@ class Game:
             self.fatguy_x = check_obj[0]
             self.fatguy_y = check_obj[1] + check_obj[3]
         
-        
+    
             
     def event_handler(self):
         for e in pygame.event.get():
@@ -249,10 +274,6 @@ class Game:
         pygame.display.flip()
         
         
-    def game_over(self):
-        self.fatguy.lifes -= 1
-        if self.fatguy.lifes > 0:
-            self.fatguy.set_pos(self.fatguy_x,self.fatguy_y)
         
 def fade_out(screen,clock):
     fill_surf = pygame.Surface((1024,768))
@@ -264,14 +285,16 @@ def fade_out(screen,clock):
         fill_surf.set_alpha(alpha)
         screen.blit(fill_surf, (0,0))
         pygame.display.flip()
+        
     
         
 def game_main():
     
-    game = Game("huge_objects.tmx",40000,150,525)        
-    game.main_loop()
-    
-    game2 = Game("huge_objects.tmx",40000,150,525)
+    game = Game("huge_objects.tmx",40000,150,525)
+    posx, posy = game.main_loop()
+    print("POSICAO NO FINAL")
+    print(posx ,posy)
+    game2 = Game("huge_objects.tmx",40000,posx,posy)
     game2.main_loop()
 
 if __name__ == "__main__": game_main()
