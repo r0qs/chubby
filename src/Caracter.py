@@ -16,12 +16,14 @@ class Caracter(pygame.sprite.Sprite):
 	        'sprinting':self._anim_sprint,
 	        'crashed_side':self._anim_crash_side,
 	        'getting_down':self._anim_get_down,
+	        'rolling':self._anim_roll,
 	        'too_high':self._anim_too_high
 	}
 	    
         self.animation_key = "running"
         
         self.sprint_timeout = 0
+        self.apex_height = 0
         self.name = name
         self.onGround = True
         self.sprinting = False
@@ -92,12 +94,9 @@ class Caracter(pygame.sprite.Sprite):
         if self.onGround == False:
         	if self.dy == 0 or \
         	self.dy - self.ddy > 0 and self.dy < 0:
+        	    self.apex_height = self.y
         	    self.falling = True
         	        
-        #Changes sprite case its falling too high
-        if self.falling_time > 55:
-            self.animation_key = "too_high"
-            self.tooHigh = True
             
         #count sprinting time
         if self.sprint_timeout <= 0 and self.sprinting:
@@ -170,8 +169,8 @@ class Caracter(pygame.sprite.Sprite):
             
     def doRoll(self):
         if self.onGround:
-            print 'ROLLLLLLLLLLLLLLLL!'
-            #self.animation_key = "rolling"
+            self._frame = 12
+            self.animation_key = "rolling"
             
     def doGetDown(self):
         if self.onGround:
@@ -185,6 +184,10 @@ class Caracter(pygame.sprite.Sprite):
             self.mask = pygame.mask.from_surface(self._framelist[0])
             self. ddx = 0
             self.animation_key = "running"
+    
+    def doTooHigh(self):
+        self.animation_key = "too_high"
+        self.tooHigh = True
     
     def doSprint(self):
         if self.onGround:
@@ -240,7 +243,14 @@ class Caracter(pygame.sprite.Sprite):
 	    self._frame = 7
 	    self._last_update = t
     
-    #def _anim_roll():
+    def _anim_roll(self,t):
+        if t - self._last_update > self._delay:
+            self._frame += 1
+            self.image = self._framelist[self._frame]
+            self._last_update = t
+            if self._frame >= 23:
+                self._frame = 0
+                self.animation_key = "running"
     #def _anim_get_down():
     #def _anim_climb():
 	

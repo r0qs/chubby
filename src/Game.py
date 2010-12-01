@@ -7,6 +7,8 @@ from tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_
 from xml import sax
 from Obstacle import *
 
+from random import randrange, random
+
 from Map import TMXHandler
 from Map import Tileset
 
@@ -23,7 +25,7 @@ REPEAT_DELAY = 50
 KEY_TIMEOUT = 230 
 # Screen resolution
 SCREEN_WIDTH, SCREEN_HEIGHT = (1024,  768)
-RESET_DELAY = 30
+RESET_DELAY = 50
 
 # Main Class of the game
 class Game:
@@ -35,7 +37,8 @@ class Game:
         
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.fase_timeout = fase_timeout
-        
+        self.shake = (0,0)
+        self.shake_amplitude = 10
         # Loading content...
         pygame.display.set_caption("Good Intentions")
         self.font = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 80)
@@ -65,8 +68,10 @@ class Game:
         self.killer_objects = get_killer_objects(self.world_map)
         self.checkpoint_objects = get_checkpoint_objects(self.world_map)
         
+        
         self.slices = set_slices(self.world_map, SLICE_SIZE, SLICE_SIZE_PIXEL)
         self._slices = set_slices(self.world_map,SLICE_SIZE,SLICE_SIZE_PIXEL)
+        
         self.key_timeout = -1
 
         # Create sprites groups for collision detection
@@ -92,7 +97,7 @@ class Game:
 
         while self.running:
             self.clock.tick(90)
-#            self.recicle()
+            self.recicle()
             self.draw_background()
             self.draw_hud()
             self.update_fatguy()
@@ -104,7 +109,7 @@ class Game:
     def recicle(self):
         g_object = self.ground_objects[0]
         k_object = self.killer_objects[0]
-        c_object = self.checkpoint_objects[0]
+#        c_object = self.checkpoint_objects[0]
         
         if g_object[0] + g_object[2] <= self.fatguy.real_x:
             self.ground_objects.pop(0)
@@ -112,27 +117,30 @@ class Game:
         if k_object.rect.x + k_object.rect.width < self.fatguy.real_x:
             self.killer_objects.pop(0)
             
-        if c_object[0] + c_object[2] <= self.fatguy.real_x:
-            self.checkpoint_objects.pop(0)
+#        if c_object[0] + c_object[2] <= self.fatguy.real_x:
+#            self.checkpoint_objects.pop(0)
        
             
     def draw_background(self):
         if self.transition:
             join_point = SLICE_SIZE_PIXEL - self.offset
-            self.screen.blit(self.past_slice.subsurface(self.offset, 0, join_point, SCREEN_HEIGHT),(0,0))
-            self.screen.blit(self.actual_slice.subsurface(0 ,0, (self.offset + SCREEN_WIDTH - SLICE_SIZE_PIXEL), SCREEN_HEIGHT),(join_point,0))
+            self.screen.blit(self.past_slice.subsurface(self.offset, 0, join_point, SCREEN_HEIGHT),self.shake)
+            self.screen.blit(self.actual_slice.subsurface(0 ,0, (self.offset + SCREEN_WIDTH - SLICE_SIZE_PIXEL), SCREEN_HEIGHT),(join_point + self.shake[0],self.shake[1]))
             if join_point < 0:
                 self.offset = 0
                 self.transition = False
         else:
-            self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), (0, 0))
+            self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), self.shake)
         
         self.offset += self.cam_speed[0]
         if(self.offset + SCREEN_WIDTH) > SLICE_SIZE_PIXEL and self.transition == False:
             self.past_slice = self.actual_slice
-            if len(self.slices) == 0: return
+            if len(self.slices) == 0: 
+                return
             self.actual_slice = self.slices.pop(0)
             self.transition = True
+        
+            
 
     def draw_hud(self):      
         secs_before = self.secs
@@ -140,8 +148,8 @@ class Game:
         decs = int(((self.fase_timeout -pygame.time.get_ticks()) % 1000) / 10)
         
         if self.secs < 10:
-#            if secs_before > self.secs:
-#                pygame.mixer.music.play(0, 0)
+            if secs_before > self.secs:
+                pygame.mixer.music.play(0, 0)
             timeup_text = self.font.render('0' + str(self.secs) + ':' + str(decs), 1, (200,5,15))
         else:
             timeup_text = self.font.render(str(self.secs) + ':' + str(decs), 1, (160,200,180))
@@ -167,6 +175,10 @@ class Game:
                     self.fatguy.sprinting = False
                     self.fatguy.onGround = True
                     self.dead = True
+                else:
+                    if self.shake_amplitude > 0:
+                        self.shake = (randrange(-self.shake_amplitude,self.shake_amplitude),randrange(-self.shake_amplitude,self.shake_amplitude) + random())
+                        self.shake_amplitude -= 1
                 
 #            if pygame.sprite.collide_mask(self.fatguy, obj):
 #                self.fatguy.stop()
@@ -178,7 +190,13 @@ class Game:
         obj, col_type = self.fatguy.collides_with_objects(self.ground_objects)
         if  col_type == 1:
             self.fatguy.put_on_ground_running(obj[1])
-
+            
+       
+       #check if the Fatguy's too high
+        if self.fatguy.falling and self.ground_objects[0][1] - self.fatguy.apex_height > 335:
+           print self.fatguy.apex_height, self.ground_objects[0][1]
+           self.fatguy.doTooHigh()
+            
         # Collides with the checkpoint 
 #        check_obj, check_collision = self.fatguy.collides_with_objects(self.checkpoint_objects)
 #        if check_collision == 1:
@@ -219,10 +237,10 @@ class Game:
                     if not self.fatguy.onGround:
                         self.fatguy.pendingGetDown = False
                     else: self.fatguy.stopGetDown()
-            if not self.fatguy.alive():
-                self.game_over()
-                pygame.time.wait(2000)
-                sys.exit()
+#            if not self.fatguy.alive():
+#                self.game_over()
+#                pygame.time.wait(2000)
+#                sys.exit()
         pygame.display.flip()
         
         
@@ -234,7 +252,7 @@ class Game:
         # Escurece a tela
         while alpha < 255:
             self.clock.tick(20)
-            alpha+=15
+            alpha+=10
             fill_surf.set_alpha(alpha)
             self.screen.blit(fill_surf, (0,0))
             pygame.display.flip()
@@ -257,7 +275,7 @@ class Game:
         alpha = 254
         while alpha > 0:
             self.clock.tick(20)
-            alpha-=15
+            alpha-=35
             fill_surf.set_alpha(alpha)
             self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), (0, 0))
             self.screen.blit(fill_surf, (0,0))
