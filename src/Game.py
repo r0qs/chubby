@@ -180,7 +180,7 @@ class Game:
             self.fatguy.put_on_ground_running(obj[1])
 
         # Collides with the checkpoint 
-        check_obj, check_collision = self.fatguy.collides_with_objects(self.checkpoint_objects)
+#        check_obj, check_collision = self.fatguy.collides_with_objects(self.checkpoint_objects)
 #        if check_collision == 1:
 #            self.fatguy_x = check_obj[0]
         
@@ -219,10 +219,10 @@ class Game:
                     if not self.fatguy.onGround:
                         self.fatguy.pendingGetDown = False
                     else: self.fatguy.stopGetDown()
-            if not self.fatguy.alive():
-                self.game_over()
-                pygame.time.wait(2000)
-                sys.exit()
+#            if not self.fatguy.alive():
+#                self.game_over()
+#                pygame.time.wait(2000)
+#                sys.exit()
         pygame.display.flip()
         
         
@@ -241,7 +241,9 @@ class Game:
 
         self.fatguy = Caracter("Rolando", self.img_fatguy, 10, 115, 115, 25)
         self.fatguy.set_pos(self.fatguy_x,self.fatguy_y)
+        self.commandHandler = CommandHandler(self.fatguy)
         self.dead = False
+        self.cam_speed  = (6,0)
         
         self.offset = 0
         self.slices = self._slices
@@ -252,12 +254,13 @@ class Game:
 
 
         # Mostra a tela
+        alpha = 254
         while alpha > 0:
             self.clock.tick(20)
             alpha-=15
             fill_surf.set_alpha(alpha)
+            self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), (0, 0))
             self.screen.blit(fill_surf, (0,0))
-#            self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), (0, 0))
             pygame.display.flip()
             
 
