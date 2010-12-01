@@ -219,10 +219,10 @@ class Game:
                     if not self.fatguy.onGround:
                         self.fatguy.pendingGetDown = False
                     else: self.fatguy.stopGetDown()
-#            if not self.fatguy.alive():
-#                self.game_over()
-#                pygame.time.wait(2000)
-#                sys.exit()
+            if not self.fatguy.alive():
+                self.game_over()
+                pygame.time.wait(2000)
+                sys.exit()
         pygame.display.flip()
         
         
