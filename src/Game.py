@@ -11,9 +11,6 @@ from Obstacle import *
 
 from random import randrange, random
 
-from Map import TMXHandler
-from Map import Tileset
-
 from Command import *
 
 from Caracter import *
@@ -263,7 +260,7 @@ class Game:
                 self.key_timeout = pygame.time.get_ticks()
                 self.fatguy.state = self.commandHandler.refresh_state(e.key)
             elif e.type == KEYUP:
-            	if e.key == K_UP:
+                if e.key == K_UP:
                     self.fatguy.stopJump()
                 if e.key == K_DOWN:
                     if not self.fatguy.onGround:
@@ -289,50 +286,48 @@ def fade_out(screen,clock):
         pygame.display.flip()
         
 def set_game_over_menu():
-	width = 1024
-	height = 768
-	pygame.display.init
-	menu_screen = pygame.display.set_mode((width,height))
-	# Background
-	background = pygame.image.load(os.path.join('', 'images', 'game_over_bg.jpg'))
-	background = background.convert()
-	
-	# Cursor
-	pygame.mouse.set_visible(False)
-	cursor = Cursor(16,16,'images/cursor.png')
-	
-	#Options in menu
-	retry = Option(100,200,550,61,'images/retry.png','images/retry_big.png',game_main, 1.109,0.05)
-	quit = Option(100,270,274,60,'images/quit.png','images/quit_big.png',game_main, 1.11,0.05)
+    width = 1024
+    height = 768
+    pygame.display.init
+    menu_screen = pygame.display.set_mode((width,height))
+    # Background
+    background = pygame.image.load(os.path.join('', 'images', 'game_over_bg.jpg'))
+    background = background.convert()
 
-	# Menu
-	menu = Menu()
-	menu.append(retry)
-	menu.append(quit)
-	
-	menu_screen.blit(background, (0, 0))
-	cursor.draw(menu_screen)
-	menu.draw(menu_screen)
-	pygame.display.flip()
-	
-	# Event loop
-	while 1:
-		menu.update(cursor)
-		for event in pygame.event.get():
-			if event.type == QUIT:
-				pygame.display.quit
-				return
-			elif event.type == MOUSEMOTION:
-				pygame.mouse.get_pos()
-				cursor.update()
-			elif event.type == MOUSEBUTTONDOWN:
-				menu.activate()
+    # Cursor
+    pygame.mouse.set_visible(False)
+    cursor = Cursor(16,16,'images/cursor.png')
 
+    #Options in menu
+    retry = Option(100,200,550,61,'images/retry.png','images/retry_big.png',game_main, 1.109,0.05)
+    quit = Option(100,270,274,60,'images/quit.png','images/quit_big.png',game_main, 1.11,0.05)
 
-		menu_screen.blit(background, (0, 0))
-		menu.draw(menu_screen)
-		cursor.draw(menu_screen)
-		pygame.display.flip()
+    # Menu
+    menu = Menu()
+    menu.append(retry)
+    menu.append(quit)
+
+    menu_screen.blit(background, (0, 0))
+    cursor.draw(menu_screen)
+    menu.draw(menu_screen)
+    pygame.display.flip()
+
+    # Event loop
+    while 1:
+        menu.update(cursor)
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.display.quit
+                return
+            elif event.type == MOUSEMOTION:
+                pygame.mouse.get_pos()
+                cursor.update()
+            elif event.type == MOUSEBUTTONDOWN:
+                menu.activate()
+        menu_screen.blit(background, (0, 0))
+        menu.draw(menu_screen)
+        cursor.draw(menu_screen)
+        pygame.display.flip()
         
         
 def game_main():

@@ -251,10 +251,10 @@ class Caracter(pygame.sprite.Sprite):
             if self._frame >= 23:
                 self._frame = 0
                 self.animation_key = "running"
-    #def _anim_get_down():
-    #def _anim_climb():
-	
-
+#TODO:
+    def doClimb(self):
+        return
+#    def _anim_climb():
 
 def getFrameList(img, width, height):
         framelist = []
