@@ -1,6 +1,8 @@
 import pygame
 from pygame.locals import *
 
+from Menu import *
+
 import sys, os
 from tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_objects, get_killer_objects, get_checkpoint_objects
 
@@ -130,7 +132,7 @@ class Game:
             self.checkpoint_collision()
             self.draw_fatguy()
             self.event_handler()
-        # Return the position of the Rolando
+        # Return the position of Rolando
         return self.fatguy_x, self.fatguy_y
 
     # Throw away utilized objects
@@ -286,7 +288,52 @@ def fade_out(screen,clock):
         screen.blit(fill_surf, (0,0))
         pygame.display.flip()
         
-    
+def set_game_over_menu():
+	width = 1024
+	height = 768
+	pygame.display.init
+	menu_screen = pygame.display.set_mode((width,height))
+	# Background
+	background = pygame.image.load(os.path.join('', 'images', 'game_over_bg.jpg'))
+	background = background.convert()
+	
+	# Cursor
+	pygame.mouse.set_visible(False)
+	cursor = Cursor(16,16,'images/cursor.png')
+	
+	#Options in menu
+	retry = Option(100,200,550,61,'images/retry.png','images/retry_big.png',game_main, 1.109,0.05)
+	quit = Option(100,270,274,60,'images/quit.png','images/quit_big.png',game_main, 1.11,0.05)
+
+	# Menu
+	menu = Menu()
+	menu.append(retry)
+	menu.append(quit)
+	
+	menu_screen.blit(background, (0, 0))
+	cursor.draw(menu_screen)
+	menu.draw(menu_screen)
+	pygame.display.flip()
+	
+	# Event loop
+	while 1:
+		menu.update(cursor)
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				pygame.display.quit
+				return
+			elif event.type == MOUSEMOTION:
+				pygame.mouse.get_pos()
+				cursor.update()
+			elif event.type == MOUSEBUTTONDOWN:
+				menu.activate()
+
+
+		menu_screen.blit(background, (0, 0))
+		menu.draw(menu_screen)
+		cursor.draw(menu_screen)
+		pygame.display.flip()
+        
         
 def game_main():
     
@@ -296,5 +343,6 @@ def game_main():
     print(posx ,posy)
     game2 = Game("huge_objects.tmx",40000,posx,posy)
     game2.main_loop()
+    game_over_menu = set_game_over_menu()
 
 if __name__ == "__main__": game_main()
