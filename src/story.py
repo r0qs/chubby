@@ -8,8 +8,8 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1024, 768))
 pygame.display.set_caption("Good Intentions")
 story = []
-for i in range(0,4):
-    story.append(pygame.image.load(os.path.join('', 'stories/prolog01', '0' + str(i+1) + '.jpg' )))
+for i in range(0,6):
+    story.append(pygame.image.load(os.path.join('', 'stories/prologo01', '0' + str(i+1) + '.jpg' )))
 print story
 
 actual_image = story[0]
@@ -22,7 +22,7 @@ def next_image():
     alpha = 0
     fill_surf.set_alpha(alpha)
     while alpha < 255:
-        clock.tick(20)
+        clock.tick(25)
         alpha+=35
         fill_surf.set_alpha(alpha)
         screen.blit(fill_surf, (0,0))
@@ -30,7 +30,7 @@ def next_image():
     story.pop(0)
     actual_image = story[0]
     while alpha > 0:
-        clock.tick(20)
+        clock.tick(25)
         alpha-=35
         fill_surf.set_alpha(alpha)
         screen.blit(actual_image, (0,0))
@@ -39,7 +39,7 @@ def next_image():
 
 adj_x, adj_y = 0 , 0
 while running:
-    clock.tick(20)
+    clock.tick(25)
     screen.blit(actual_image, (0 - adj_x, 0 - adj_y))
     adj_x += 0.5
     adj_y += 0.5
