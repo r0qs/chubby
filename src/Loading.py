@@ -4,4 +4,3 @@ from pygame.locals import *
 
 class Loading:
     def __init__(self):
-    

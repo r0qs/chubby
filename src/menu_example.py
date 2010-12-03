@@ -50,7 +50,6 @@ def main():
 			elif event.type == MOUSEBUTTONDOWN:
 				menu.activate()
 
-
 		menu_screen.blit(background, (0, 0))
 		menu.draw(menu_screen)
 		cursor.draw(menu_screen)

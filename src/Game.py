@@ -15,6 +15,8 @@ from Command import *
 
 from Caracter import *
 
+from Sound import *
+
 # Slice attributes
 SLICE_SIZE_PIXEL = 5120 
 SLICE_SIZE = 80
@@ -35,7 +37,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.initial_clock = pygame.time.get_ticks()
         self.running = True
-        
+
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.fase_timeout = fase_timeout
         self.shake = (0,0)
@@ -45,10 +47,12 @@ class Game:
         self.font = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 80)
         self.font_small = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 35)
         self.km_label_text = self.font_small.render('Km/h', 1, (15,15,215))
-        pygame.mixer.music.load(os.path.join('', 'sounds', 'beep.mp3'))
         self.time_display = pygame.image.load(os.path.join('', 'images', 'display.png'))
         self.img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
         
+        #Sounds
+        self.bg_music = Music()
+        self.beep = SoundEffect()
         # Loading Rolando 
         self.fatguy = Caracter("Rolando", self.img_fatguy, 10, 115, 115, 25)
         self.fatguy.set_pos(fatguy_x,fatguy_y)
@@ -117,7 +121,7 @@ class Game:
 
     # The main function of the class
     def main_loop(self):
-
+        self.bg_music.play_music('Gluck-Melodie.ogg')
         while self.running:
             self.clock.tick(90)
             self.recicle()
@@ -130,6 +134,7 @@ class Game:
             self.draw_fatguy()
             self.event_handler()
         # Return the position of Rolando
+        self.bg_music.stop_music()
         return self.fatguy_x, self.fatguy_y
 
     # Throw away utilized objects
@@ -174,10 +179,10 @@ class Game:
         time = int(self.fase_timeout - (pygame.time.get_ticks() - self.initial_clock))
         self.secs = time / 1000
         decs = ((time % 1000) / 10)
-        
+
         if self.secs < 10:
             if secs_before > self.secs:
-                pygame.mixer.music.play(0, 0)
+               self.beep.play_effect('beep.mp3')
             timeup_text = self.font.render('0' + str(self.secs) + ':' + str(decs), 1, (200,5,15))
         else:
             timeup_text = self.font.render(str(self.secs) + ':' + str(decs), 1, (160,200,180))
@@ -249,13 +254,14 @@ class Game:
         if check_collision == 1:
             self.fatguy_x = check_obj[0]
             self.fatguy_y = check_obj[1] + check_obj[3]
-        
-    
+
+
             
     def event_handler(self):
         for e in pygame.event.get():
             if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
                 self.running = False
+                sys.exit()
             elif e.type == KEYDOWN:
                 self.key_timeout = pygame.time.get_ticks()
                 self.fatguy.state = self.commandHandler.refresh_state(e.key)
@@ -271,7 +277,6 @@ class Game:
                 pygame.time.wait(2000)
                 sys.exit()
         pygame.display.flip()
-        
         
         
 def fade_out(screen,clock):
@@ -300,7 +305,7 @@ def set_game_over_menu():
 
     #Options in menu
     retry = Option(100,200,550,61,'images/retry.png','images/retry_big.png',game_main, 1.109,0.05)
-    quit = Option(100,270,274,60,'images/quit.png','images/quit_big.png',game_main, 1.11,0.05)
+    quit = Option(100,270,274,60,'images/quit.png','images/quit_big.png',sys.exit, 1.11,0.05)
 
     # Menu
     menu = Menu()
@@ -318,6 +323,7 @@ def set_game_over_menu():
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.display.quit
+                sys.exit()
                 return
             elif event.type == MOUSEMOTION:
                 pygame.mouse.get_pos()

@@ -1,9 +1,6 @@
 import pygame
 from pygame.locals import *
 
-#TODO:
-# collision detection
-
 
 class Caracter(pygame.sprite.Sprite):
     x,y = (0,0)
