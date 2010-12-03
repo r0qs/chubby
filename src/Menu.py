@@ -1,9 +1,6 @@
 import pygame
 from pygame.locals import *
 
-
-
-
 class Option:
 
 	# selected_size = the size of the surface when she's selected (2 = double size)

@@ -89,11 +89,11 @@ class Caracter(pygame.sprite.Sprite):
             self.falling_time += 1
         
         if self.onGround == False:
-        	if self.dy == 0 or \
-        	self.dy - self.ddy > 0 and self.dy < 0:
-        	    self.apex_height = self.y
-        	    self.falling = True
-        	        
+            if self.dy == 0 or \
+            self.dy - self.ddy > 0 and self.dy < 0:
+                self.apex_height = self.y
+                self.falling = True
+
             
         #count sprinting time
         if self.sprint_timeout <= 0 and self.sprinting:
@@ -123,12 +123,9 @@ class Caracter(pygame.sprite.Sprite):
     # obj, 2: if the sprite collides with the object from the left
     def collides_with_objects(self, objects_list):
         for obj in objects_list:
-
             if self.rect.colliderect(Rect(obj)):
                 return obj, 1
         return -1, -1
-
-
 
     def put_on_ground_running(self, ground_y):
         self.dy = 0

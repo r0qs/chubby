@@ -4,7 +4,7 @@ from pygame.locals import *
 from Menu import *
 
 import sys, os
-from tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_objects, get_killer_objects, get_checkpoint_objects
+from Tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_objects, get_killer_objects, get_checkpoint_objects
 
 from xml import sax
 from Obstacle import *
@@ -53,6 +53,7 @@ class Game:
         #Sounds
         self.bg_music = Music()
         self.beep = SoundEffect()
+
         # Loading Rolando 
         self.fatguy = Caracter("Rolando", self.img_fatguy, 10, 115, 115, 25)
         self.fatguy.set_pos(fatguy_x,fatguy_y)
@@ -182,7 +183,7 @@ class Game:
 
         if self.secs < 10:
             if secs_before > self.secs:
-               self.beep.play_effect('beep.mp3')
+               self.beep.play_effect('beep.ogg', 0)
             timeup_text = self.font.render('0' + str(self.secs) + ':' + str(decs), 1, (200,5,15))
         else:
             timeup_text = self.font.render(str(self.secs) + ':' + str(decs), 1, (160,200,180))
