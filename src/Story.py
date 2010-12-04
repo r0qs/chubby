@@ -1,15 +1,17 @@
 import pygame
 from pygame.locals import *
+from Sound import *
 import sys, os
 
 pygame.init()
 running = True
+bg_music = Music()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1024, 768))
 pygame.display.set_caption("Good Intentions")
 story = []
-for i in range(0,6):
-    story.append(pygame.image.load(os.path.join('', 'stories/prologo01', '0' + str(i+1) + '.jpg' )))
+for i in range(0,2):
+    story.append(pygame.image.load(os.path.join('', 'stories/fail01', '0' + str(i+1) + '.jpg' )))
 print story
 
 actual_image = story[0]
@@ -38,6 +40,7 @@ def next_image():
         pygame.display.flip()
 
 adj_x, adj_y = 0 , 0
+bg_music.play_music('Gluck-Melodie.ogg')
 while running:
     clock.tick(25)
     screen.blit(actual_image, (0 - adj_x, 0 - adj_y))
