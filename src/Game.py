@@ -46,10 +46,11 @@ class Game:
         self.shake_amplitude = 10
         # Loading content...
         pygame.display.set_caption("Good Intentions")
-        self.font = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 80)
-        self.font_small = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 35)
-        self.km_label_text = self.font_small.render('Km/h', 1, (15,15,215))
+        self.font = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 70)
+        self.font_small = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 28)
+        self.km_label_text = self.font_small.render('Km/h', 1, (200,205,215))
         self.time_display = pygame.image.load(os.path.join('', 'images', 'display.png'))
+        self.speed_display = pygame.image.load(os.path.join('', 'images', 'display_speed.png'))
         self.img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
         
         #Sounds
@@ -191,9 +192,10 @@ class Game:
         
         speed_m_per_s = float(self.fatguy.dx / 64.0) * 100
         speed_km_per_h = int(speed_m_per_s * 3.6)
-        speed_text = self.font.render(str(speed_km_per_h), 1, (15,15,215))
-        self.screen.blit(speed_text, Rect(765, 680, 300, 90))
-        self.screen.blit(self.km_label_text, Rect(865, 690, 300, 90))
+        speed_text = self.font.render(str(speed_km_per_h), 1, (200,205,215))
+        self.screen.blit(self.speed_display, (788,668))
+        self.screen.blit(speed_text, Rect(820, 690, 300, 90))
+        self.screen.blit(self.km_label_text, (930, 682))
             
     # Draw the fatguy
     def draw_fatguy(self):
@@ -271,7 +273,7 @@ class Game:
                 if e.key == K_DOWN:
                     if not self.fatguy.onGround:
                         self.fatguy.pendingGetDown = False
-                    else: self.fatguy.stopGetDown()
+                    if self.fatguy.sliding: self.fatguy.stopGetDown()
             if not self.fatguy.alive():
                 self.game_over()
                 pygame.time.wait(2000)
@@ -341,11 +343,11 @@ def game_main():
     bg_music.play_music('Gluck-Melodie.ogg')
     prolog = Story('prologo01', 6)
     prolog.play()
-    game = Game("huge_objects.tmx",40000,150,525)
+    game = Game("huge_objects.tmx",35000,150,525)
     posx, posy = game.main_loop()
     print("POSICAO NO FINAL")
     print(posx ,posy)
-    game2 = Game("huge_objects.tmx",40000,posx,posy)
+    game2 = Game("huge_objects.tmx",35000,posx,posy)
     game2.main_loop()
     game_over_menu = set_game_over_menu()
 

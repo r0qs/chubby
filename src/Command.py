@@ -13,7 +13,7 @@ class CommandHandler(object):
     final_state = 0
 
     def __init__(self, caracter):
-    	self.caracter = caracter
+        self.caracter = caracter
         self.actual_state = 0
 
     def refresh_state(self, in_key):

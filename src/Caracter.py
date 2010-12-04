@@ -24,6 +24,7 @@ class Caracter(pygame.sprite.Sprite):
         self.name = name
         self.onGround = True
         self.sprinting = False
+        self.sliding = False
         self.pendingRoll = False
         self.pendingGetDown = False
         self.falling = False
@@ -38,8 +39,8 @@ class Caracter(pygame.sprite.Sprite):
         self._y = self.y        #ground level
         self.dx = 6             #distance per frame (velocity) covered in x
         self.dy = 0             #distance per frame (velocity) covered in y
-        self.ddx = 0		#acceleration on the x speed
-        self.ddy = 0		#acceleration on the y speed
+        self.ddx = 0        #acceleration on the x speed
+        self.ddy = 0        #acceleration on the y speed
         self.real_x = 0     # real x position (related to the start of the level)
         self.real_y = 0     # real y position (related to the start of the level)
         self._framelist = getFrameList(img, self._w, self._h)
@@ -102,14 +103,13 @@ class Caracter(pygame.sprite.Sprite):
                 self.animation_key = "running"
         elif self.sprinting:
             time_passed = t - self._last_update
-
             self.sprint_timeout -= time_passed
         
         # animation
         self.animate[self.animation_key](t)
 
     def stop(self):
-    	self.ddx = 0
+        self.ddx = 0
         self.dx = 0
         self.ddy = 0
         self.dy = 0
@@ -169,16 +169,17 @@ class Caracter(pygame.sprite.Sprite):
             
     def doGetDown(self):
         if self.onGround:
+            self.sliding = True
             self.sprinting = False
             self.sprint_timeout = 0
             self.mask = pygame.mask.from_surface(self._framelist[10])
             self. ddx = -0.04
             self.animation_key = "getting_down"
     def stopGetDown(self):
-        if self.onGround:
-            self.mask = pygame.mask.from_surface(self._framelist[0])
-            self. ddx = 0
-            self.animation_key = "running"
+        self.sliding = False
+        self.mask = pygame.mask.from_surface(self._framelist[0])
+        self. ddx = 0
+        self.animation_key = "running"
     
     def doTooHigh(self):
         self.animation_key = "too_high"
@@ -199,44 +200,44 @@ class Caracter(pygame.sprite.Sprite):
         self.animation_key = "crashed_side"
             
     def _anim_run(self, t):
-	    if t - self._last_update > self._delay:
-	        self._frame += 1
-	        if self._frame >= 9:
-		    self._frame = 0
-	        if self.onGround:
-		        self.image = self._framelist[self._frame]
-	        self._last_update = t
-	        
+        if t - self._last_update > self._delay:
+            self._frame += 1
+            if self._frame >= 9:
+                self._frame = 0
+            if self.onGround:
+                self.image = self._framelist[self._frame]
+            self._last_update = t
+            
     def _anim_sprint(self, t):
-	    if t - self._last_update > self._delay:
-	        self._frame += 2
-	        if self._frame >= 9:
-		    self._frame = 0
-	        if self.onGround:
-		    self.image = self._framelist[self._frame]
-	        elif self.dy < 0:
-		    self.image = self._framelist[5]
-		    self.dy = 1
-		    self.onGround = True
-	        self._last_update = t
-	        
+        if t - self._last_update > self._delay:
+            self._frame += 2
+            if self._frame >= 9:
+                self._frame = 0
+            if self.onGround:
+                self.image = self._framelist[self._frame]
+            elif self.dy < 0:
+                self.image = self._framelist[5]
+                self.dy = 1
+                self.onGround = True
+            self._last_update = t
+            
     def _anim_jump(self, t):
-	    self.image = self._framelist[7]
-	    self._frame = 7
-	    self._last_update = t
-	    
+        self.image = self._framelist[7]
+        self._frame = 7
+        self._last_update = t
+        
     def _anim_get_down(self, t):
-	    self.image = self._framelist[10]
-	    self._frame = 7
-	    self._last_update = t
+        self.image = self._framelist[10]
+        self._frame = 7
+        self._last_update = t
     def _anim_crash_side(self, t):
-	    self.image = self._framelist[11]
-	    self._frame = 7
-	    self._last_update = t
+        self.image = self._framelist[11]
+        self._frame = 7
+        self._last_update = t
     def _anim_too_high(self, t):
-	    self.image = self._framelist[12]
-	    self._frame = 7
-	    self._last_update = t
+        self.image = self._framelist[12]
+        self._frame = 7
+        self._last_update = t
     
     def _anim_roll(self,t):
         if t - self._last_update > self._delay:
