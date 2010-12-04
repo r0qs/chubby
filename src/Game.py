@@ -17,6 +17,8 @@ from Caracter import *
 
 from Sound import *
 
+from Story import Story 
+
 # Slice attributes
 SLICE_SIZE_PIXEL = 5120 
 SLICE_SIZE = 80
@@ -51,7 +53,6 @@ class Game:
         self.img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
         
         #Sounds
-        self.bg_music = Music()
         self.beep = SoundEffect()
 
         # Loading Rolando 
@@ -122,7 +123,6 @@ class Game:
 
     # The main function of the class
     def main_loop(self):
-        self.bg_music.play_music('Gluck-Melodie.ogg')
         while self.running:
             self.clock.tick(90)
             self.recicle()
@@ -135,7 +135,6 @@ class Game:
             self.draw_fatguy()
             self.event_handler()
         # Return the position of Rolando
-        self.bg_music.stop_music()
         return self.fatguy_x, self.fatguy_y
 
     # Throw away utilized objects
@@ -338,7 +337,10 @@ def set_game_over_menu():
         
         
 def game_main():
-    
+    bg_music = Music()
+    bg_music.play_music('Gluck-Melodie.ogg')
+    prolog = Story('prologo01', 6)
+    prolog.play()
     game = Game("huge_objects.tmx",40000,150,525)
     posx, posy = game.main_loop()
     print("POSICAO NO FINAL")
