@@ -98,7 +98,8 @@ class Caracter(pygame.sprite.Sprite):
         #count sprinting time
         if self.sprint_timeout <= 0 and self.sprinting:
             self.sprinting = False
-            self.animation_key = "running"
+            if self.animation_key == 'sprinting':
+                self.animation_key = "running"
         elif self.sprinting:
             time_passed = t - self._last_update
 

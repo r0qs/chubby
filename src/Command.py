@@ -7,9 +7,9 @@ class CommandHandler(object):
     _automata_transitions= [[11,11,0, 4, 0, 0, 11,11,0, 11,0, 11,13,0],#up
                             [9, 2, 0, 0, 0, 0, 9, 9, 0, 0, 0, 12,0, 0],#down
                             [0, 6, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],#left
-                            [1, 0, 0, 0, 5, 0, 7, 0, 0, 0, 0, 0, 0, 0]]#right
+                            [1, 0, 0, 0, 5, 0, 7, 0, 0, 0, 0, 1, 0, 0]]#right
     # The final states
-    final_list = [5,7,9,11,13]
+    final_list = [3,7,9,11,13]
     final_state = 0
 
     def __init__(self, caracter):
@@ -26,11 +26,9 @@ class CommandHandler(object):
 
         self.actual_state = self._automata_transitions[input_code][self.actual_state]
 
-        if self.actual_state == 5:
+        if self.actual_state == 3:
             if self.caracter.onGround == False: 
                 self.caracter.pendingRoll = True    
-            else:
-                self.caracter.doRoll()
         elif self.actual_state == 7: self.caracter.doSprint()
         elif self.actual_state == 9:
             if self.caracter.onGround == False: 
@@ -39,7 +37,7 @@ class CommandHandler(object):
                 self.caracter.doGetDown()
         elif self.actual_state == 11: self.caracter.doJump()
         elif self.actual_state == 13: self.caracter.doClimb()
-        #print "estado atual:" + str(self.actual_state)
+        print "estado atual:" + str(self.actual_state)
         
         if self.final_state in self.final_list :
             self.actual_state = 0
