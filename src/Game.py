@@ -355,9 +355,11 @@ def set_game_over_menu():
         
 def game_main():
     prolog_music = Music()
-    prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951-2.ogg',1)
-    prolog = Story('prologo01', 9)
-    prolog.play(True)
+    prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg',1)
+    #prolog = Story('prologo01', 9)
+    #prolog.play()
+    lala = Story('prolog01',4)
+    lala.play()
     prolog_music.fadeout_music(1)
     game = Game("huge_objects.tmx",200000,150,525,'Dicennian_Running_Past.ogg')
     posx, posy = game.main_loop()

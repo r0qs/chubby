@@ -1,15 +1,11 @@
 import pygame
 from pygame.locals import *
 
-from Sound import *
-
 import sys, os
 from random import choice
 import string
 
-
-class Story:
-
+class teste:
 	def __init__(self,folder, n_frames):
 		self.clock = pygame.time.Clock()
 		self.screen = pygame.display.set_mode((1024, 768))
@@ -18,11 +14,24 @@ class Story:
 			self.story.append(pygame.image.load(os.path.join('', 'stories/' + folder, str(i+1) + '.jpg')))
 		self.actual_image = self.story[0]
 
-		#gen buttons sequence
 		pygame.font.init()
-		self.buttons = generate_buttons_sequence(5)
+		#self.buttons = generate_buttons_sequence(5)
+		self.buttons = ['q','w','e','r','t']
 		self.font = pygame.font.Font(os.path.join('', 'data', 'buttons.ttf'), 70)
- 
+		self.font.set_bold(True)
+
+	def _next_image_wiyh_crazy_buttons(self):
+		fill_surf = pygame.Surface((1024,768))
+		fill_surf.fill((10,10,10))
+		alpha = 0
+		fill_surf.set_alpha(alpha)
+		#buttons display
+		if len(self.buttons) > 0:
+			#button = self.font.render(command, 1, (255,0,0))
+			self.screen.blit(button, (100,200)) # blit actual_button
+		self.screen.blit(fill_surf, (0,0))
+		pygame.display.flip()
+
 	def _next_image(self):
 		fill_surf = pygame.Surface((1024,768))
 		fill_surf.fill((10,10,10))
@@ -43,38 +52,24 @@ class Story:
 			self.screen.blit(self.actual_image, (0,0))
 			self.screen.blit(fill_surf, (0,0))
 			pygame.display.flip()
-			
-	def _next_image_wiyh_crazy_buttons(self):
-		fill_surf = pygame.Surface((1024,768))
-		fill_surf.fill((10,10,10))
-		alpha = 0
-		fill_surf.set_alpha(alpha)
-		#buttons display
-		if len(self.buttons) > 0:
-			#button = self.font.render(command, 1, (255,0,0))
-			self.screen.blit(button, (100,200)) # blit actual_button
-
-		self.screen.blit(fill_surf, (0,0))
-		pygame.display.flip()
 
 	def play(self):
 		adj_x, adj_y = 0 , 0
 		running = True
+		hit = False
+		count = 0
 		while running:
 			self.clock.tick(26)
 			self.screen.blit(self.actual_image, (0 - adj_x, 0 - adj_y))
 			adj_x += 0.5
 			adj_y += 0.5
+			if len(self.buttons) > 0:
+				char = self.buttons.pop(0)
+				button = self.font.render(char, 1, (200,100,100))
+				self.screen.blit(button, (600,500)) # blit actual_button
 			if self.actual_image.get_width() < self.screen.get_width() + adj_x or self.actual_image.get_height() < self.screen.get_height() + adj_y:
 				adj_x = 0
 				adj_y = 0
-				while len(self.buttons) > 0:
-					char = self.buttons.pop(0)
-					key = pygame.key.get_pressed()  #checking pressed keys
-					if pygame.key.name(key) == char:
-						command = command + key
-					else:
-						hit = False
 				if len(self.story) == 1:
 					running = False
 				elif hit:
@@ -83,6 +78,13 @@ class Story:
 			for e in pygame.event.get():
 				if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
 					running = False
+				if e.type is KEYDOWN:
+					key = pygame.key.name(e.key)
+					if key == char:
+						count = count + 1
+						print key
+					else:
+						hit = False
 			pygame.display.flip()
 
 def generate_buttons_sequence(length):
@@ -91,3 +93,9 @@ def generate_buttons_sequence(length):
 	for i in range(0,length):
 		buttons.append(choice(chars))
 	return buttons
+
+def game_main():
+    lala = teste('prolog01',4)
+    lala.play()
+
+if __name__ == "__main__": game_main()
