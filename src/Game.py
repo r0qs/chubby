@@ -347,7 +347,7 @@ def game_main():
     prolog_music = Music()
     prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951-2.ogg',1)
     prolog = Story('prologo01', 6)
-    prolog.play()
+    prolog.play(True)
     prolog_music.fadeout_music(1)
     game = Game("huge_objects.tmx",200000,150,525,'Dicennian_Running_Past.ogg')
     posx, posy = game.main_loop()
