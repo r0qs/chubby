@@ -145,7 +145,12 @@ class Game:
     # Throw away utilized objects
     def recicle(self):
         g_object = self.ground_objects[0]
-        k_object = self.killer_objects[0]
+        try:
+            k_object = self.killer_objects[0]
+        except IndexError:
+            running = False
+            prolog = Story('suceed01', 7)
+            prolog.play()
         c_object = self.checkpoint_objects[0]
         
         if g_object[0] + g_object[2] <= self.fatguy.real_x:
@@ -167,7 +172,12 @@ class Game:
                 self.offset = 0
                 self.transition = False
         else:
-            self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), self.shake)
+            try:
+                self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), self.shake)
+            except ValueError:
+                running = False
+                prolog = Story('suceed01', 7)
+                prolog.play()
         
         self.offset += self.cam_speed[0]
         if(self.offset + SCREEN_WIDTH) > SLICE_SIZE_PIXEL and self.transition == False:
@@ -346,7 +356,7 @@ def set_game_over_menu():
 def game_main():
     prolog_music = Music()
     prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951-2.ogg',1)
-    prolog = Story('prologo01', 6)
+    prolog = Story('prologo01', 9)
     prolog.play(True)
     prolog_music.fadeout_music(1)
     game = Game("huge_objects.tmx",200000,150,525,'Dicennian_Running_Past.ogg')
@@ -355,6 +365,8 @@ def game_main():
     print(posx ,posy)
     game2 = Game("huge_objects.tmx",200000,posx,posy,'CorvusCorax-Tourdion.ogg')
     game2.main_loop()
+    fail = Story('fail01', 3)
+    fail.play()
     game_over_menu = set_game_over_menu()
 
 if __name__ == "__main__": game_main()
