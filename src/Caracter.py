@@ -59,6 +59,8 @@ class Caracter(pygame.sprite.Sprite):
         
         self.lifes = 3 # Checkpoint chances (only 3 for while)
 
+        self.is_alive = True
+
     def set_pos(self, x, y):
         difference = x - self.x
         self.real_x += difference

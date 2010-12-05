@@ -4,7 +4,7 @@ from pygame.locals import *
 from Menu import *
 
 import sys, os
-from Tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_objects, get_killer_objects, get_checkpoint_objects
+from Tmx_loader import TileMapParser, ImageLoaderPygame, set_slices, get_ground_objects, get_killer_objects, get_checkpoint_objects, get_goal_objects
 
 from xml import sax
 from Obstacle import *
@@ -30,6 +30,7 @@ KEY_TIMEOUT = 230
 SCREEN_WIDTH, SCREEN_HEIGHT = (1024,  768)
 # Delay to reset a stage
 RESET_DELAY = 50
+ROLANDO_DISTANCE = 150
 
 # Main Class of the game
 class Game:
@@ -52,7 +53,7 @@ class Game:
         self.time_display = pygame.image.load(os.path.join('', 'images', 'display.png'))
         self.speed_display = pygame.image.load(os.path.join('', 'images', 'display_speed.png'))
         self.img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
-        
+
         #Sounds
         self.bg_music = Music()
         self.bg_music.load_music(music)
@@ -60,14 +61,16 @@ class Game:
 
         # Loading Rolando 
         self.fatguy = Caracter("Rolando", self.img_fatguy, 10, 115, 115, 25)
-        self.fatguy.set_pos(fatguy_x,fatguy_y)
         self.commandHandler = CommandHandler(self.fatguy)
         self.dead = False
-        self.fatguy_x = fatguy_x
+        self.fatguy_x = fatguy_x%5120
         self.fatguy_y = fatguy_y
+        self.fatguy.real_x = fatguy_x
+        self.fatguy.x = ROLANDO_DISTANCE
+        self.fatguy.y = self.fatguy_y
         
         # Initial Speed of the camera
-        self.cam_speed  = (70,0)
+        self.cam_speed  = (6,0)
         
         # Loading the stage
         self.world_map = TileMapParser().parse_decode(stage_path)
@@ -77,9 +80,9 @@ class Game:
         self.ground_objects = get_ground_objects(self.world_map)
         self.killer_objects = get_killer_objects(self.world_map)
         self.checkpoint_objects = get_checkpoint_objects(self.world_map)
-        
+        self.goal = get_goal_objects(self.world_map)
+
         self.slices = set_slices(self.world_map, SLICE_SIZE, SLICE_SIZE_PIXEL)
-        self.initialize_slices()
         self.key_timeout = -1
 
         # Create sprites groups for collision detection
@@ -91,38 +94,43 @@ class Game:
         self.sceneGroup = pygame.sprite.Group()
         
         # Controlling the movement of the background
-        self.offset = 0
-        self.actual_slice = self.slices.pop(0)
+        self.offset = self.initialize_slices() - ROLANDO_DISTANCE
         self.secs = int((self.fase_timeout) / 1000)
-        self.past_slice = self.actual_slice
         self.transition = False
+
+        if(self.offset + SCREEN_WIDTH) > SLICE_SIZE_PIXEL:
+            self.actual_slice = self.slices.pop(0)
+            self.past_slice = self.actual_slice
+            self.actual_slice = self.slices.pop(0)
+            self.transition = True
+        else:
+            self.actual_slice = self.slices.pop(0)
+            self.past_slice = self.actual_slice
         
         # Controlling the reset
         self.reset_delay = RESET_DELAY
     
     # Calcule the first slice of the stage
     def initialize_slices(self):
-        flag = False
-        x = self.fatguy_x
+        offset = self.fatguy.real_x
         real_x = SLICE_SIZE_PIXEL
-        while(x > SLICE_SIZE_PIXEL):
+        while(offset > SLICE_SIZE_PIXEL):
             g_object = self.ground_objects[0]
             k_object = self.killer_objects[0]
             c_object = self.checkpoint_objects[0]
             while(g_object[0] + g_object[2] < real_x):
                 self.ground_objects.pop(0)
                 g_object = self.ground_objects[0]
-          #  while(k_object[0] + k_object[2] < real_x):
-          #      self.killer_objects.pop(0)
-          #      k_object = self.killer_objects[0]
+            while(k_object.rect.x + k_object.rect.width < real_x):
+                self.killer_objects.pop(0)
+                k_object = self.killer_objects[0]
             while(c_object[0] + c_object[2] < real_x):
                 self.checkpoint_objects.pop(0)
                 c_object = self.checkpoint_objects[0]
             self.slices.pop(0)
             real_x += SLICE_SIZE_PIXEL
-            x -= SLICE_SIZE_PIXEL
-            flag = True
-        self.offset = x 
+            offset -= SLICE_SIZE_PIXEL
+        return offset
 
     # The main function of the class
     def main_loop(self):
@@ -136,11 +144,17 @@ class Game:
             self.killer_collision()
             self.ground_collision()
             self.checkpoint_collision()
+            self.goal_collision()
             self.draw_fatguy()
             self.event_handler()
         self.bg_music.pause_music()
         # Return the position of Rolando
-        return self.fatguy_x, self.fatguy_y
+        # Return the position of Rolando
+        if self.dead:
+            return self.fatguy_x, self.fatguy_y
+        else:
+            return 0,0
+            
 
     # Throw away utilized objects
     def recicle(self):
@@ -194,8 +208,13 @@ class Game:
         time = int(self.fase_timeout - (pygame.time.get_ticks() - self.initial_clock))
         self.secs = time / 1000
         decs = ((time % 1000) / 10)
-
         if self.secs < 10:
+            # Time's up
+            if self.secs <= 0 and decs <= 0:
+                self.dead = True
+                #FIXME: the time cannot be negative
+                self.secs = 0
+                decs = 0
             if secs_before > self.secs:
                self.beep.play_effect('beep.ogg', 1, 0)
             timeup_text = self.font.render('0' + str(self.secs) + ':' + str(decs), 1, (200,5,15))
@@ -210,7 +229,7 @@ class Game:
         self.screen.blit(self.speed_display, (788,668))
         self.screen.blit(speed_text, Rect(820, 690, 300, 90))
         self.screen.blit(self.km_label_text, (930, 682))
-            
+
     # Draw the fatguy
     def draw_fatguy(self):
         self.screen.blit(self.fatguy.image,  self.fatguy.get_pos())
@@ -224,15 +243,22 @@ class Game:
                 self.key_timeout = -1
                 
         adjust = 0
-        #check if the Fatguy's too high
+        # Check if the Fatguy's too high
         if self.fatguy.falling and self.ground_objects[0][1] - self.fatguy.apex_height > 335:
            print self.fatguy.apex_height, self.ground_objects[0][1]
            self.fatguy.doTooHigh()
         
+        # Rolando's falling in the hole
+        if self.fatguy.y > SCREEN_HEIGHT:
+            self.dead = True
+        
+        if not self.fatguy.is_alive:
+            self.dead = True
+        
         if not self.dead:
             if self.fatguy.sprinting:
                 adjust = -4
-            if self.fatguy.x > 150:  ##
+            if self.fatguy.x > 100:
                 adjust += 2
             else:
                 adjust = 0
@@ -242,7 +268,8 @@ class Game:
             if self.reset_delay == 0:
                 fade_out(self.screen,self.clock)
                 self.running = False
-        
+
+
     # Collides with Killer Objects
     def killer_collision(self):
         obj, col_type = self.fatguy.collides_with_objects(self.killer_objects)
@@ -273,13 +300,19 @@ class Game:
                         self.shake_amplitude -= 1
         else:
             self.fatguy.onGround = False
-            
+
+    # Collides with the goal 
+    def goal_collision(self):
+        if self.fatguy.rect.colliderect(Rect(self.goal[0],self.goal[1],self.goal[2],self.goal[3])):
+            print("Colidiu com o goal!")
+            self.running = False 
+
     # Collides with the checkpoint 
     def checkpoint_collision(self):
         check_obj, check_collision = self.fatguy.collides_with_objects(self.checkpoint_objects)
         if check_collision == 1:
             self.fatguy_x = check_obj[0]
-            self.fatguy_y = check_obj[1] + check_obj[3]
+            self.fatguy_y = check_obj[1] + check_obj[3] -115
 
 
             
@@ -366,8 +399,8 @@ def set_game_over_menu():
 def game_main():
     prolog_music = Music()
     prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg',1)
-    #prolog = Story('prologo01', 9)
-    #prolog.play()
+    prolog = Story('prologo01', 9)
+    prolog.play()
     #lala = Story('prolog01',4)
     #lala.play()
     prolog_music.fadeout_music(1)

@@ -863,5 +863,11 @@ def get_checkpoint_objects(world_map):
                 checkpoint.append((obj.x, obj.y, obj.width, obj.height))
     return checkpoint
 
+def get_goal_objects(world_map):
+    for g in world_map.object_groups:
+        if g.name == "goal":
+            for obj in g.objects:
+                goal = (obj.x,obj.y,obj.width,obj.height) 
+                return goal
 #-------------------------------------------------------------------------------
 

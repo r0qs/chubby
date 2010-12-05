@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="960" height="12" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="proto06" tilewidth="64" tileheight="64">
   <image source="tilesets/proto06.png"/>
@@ -36,7 +37,7 @@
  </layer>
  <layer name="obstacles" width="960" height="12">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3czQqDMAwAYCvbwf28/+tuMoYgOHUYl87vu3jQQwpNayK2aQAAAAAAAAAAAACoxbX8OgIAAAAAANYqersAAAAcQKv+BQAA4M/1337bogYGoA7FnkVF9pircgLgZcl6+H4m09p5CojjnGRsAHwv454Fn0TOVfkA7Cn7eYhL18Tuee9ShmsGt4A47knGdjTZ8wSoy9ye5TyLfCJ62jUYv4dFzE31LwAAHNeWdcCa/p3/iKZF9LR7Uf3VrerUca+mC4g34zeMOdF5ou8OAAAAAAAAwJQHyTXJUgC0AAA=
+   H4sIAAAAAAAAA+3czQqDMAwAYCvbwf28/+tuQ4YgbLqxuNR+38WDHlJoWpNCuw4AAAAAAAAAAACAWpzLvyMAAAAAAOBTRW8XAACABvTqXwAAAHbucfbbFzUwAHUo9iwqssVclRMAozXr4fObTGvnISCOY5KxAfC9jHsWvBM5V+UDsKXs9yGuXROH+7tTmZ4ZXALiuCYZW2uy5wlQl6U9y30WZDH/D4uYm+pfAABolzqgHVH91V/VqfNezRAQb8YzjCXR+anvDgAAAAAAAMArNzIl/2QAtAAA
   </data>
  </layer>
  <layer name="tunel" width="960" height="12">
@@ -101,15 +102,12 @@
   <object name="" x="57470" y="754" width="578" height="12"/>
   <object name="" x="41018" y="758" width="1356" height="9"/>
   <object name="" x="46285" y="492" width="7" height="143"/>
-  <object name="" x="44893" y="600" width="7" height="31"/>
   <object name="" x="43652" y="531" width="55" height="108"/>
   <object name="" x="43717" y="585" width="49" height="49"/>
   <object name="" x="43140" y="457" width="246" height="46"/>
   <object name="" x="43209" y="392" width="109" height="57"/>
   <object name="" x="25435" y="535" width="9" height="32"/>
-  <object name="" x="45576" y="588" width="112" height="46"/>
   <object name="" x="49115" y="151" width="10" height="30"/>
-  <object name="" x="50136" y="559" width="16" height="72"/>
   <object name="" x="60125" y="596" width="7" height="33"/>
   <object name="" x="58566" y="584" width="51" height="47"/>
   <object name="" x="55684" y="451" width="245" height="123"/>
@@ -125,5 +123,8 @@
   <object name="" x="14081" y="1" width="61" height="572"/>
   <object name="" x="42496" y="5" width="60" height="570"/>
   <object name="" x="48900" y="12" width="64" height="448"/>
+ </objectgroup>
+ <objectgroup color="#00007f" name="goal" width="960" height="12">
+  <object name="" x="61248" y="514" width="66" height="116"/>
  </objectgroup>
 </map>
