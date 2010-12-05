@@ -6,9 +6,17 @@
  <tileset firstgid="257" name="obj" tilewidth="64" tileheight="64">
   <image source="tilesets/obj.png"/>
  </tileset>
+ <tileset firstgid="321" name="warnings01" tilewidth="64" tileheight="64">
+  <image source="tilesets/warnings01.png"/>
+ </tileset>
  <layer name="sky" width="960" height="12">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3ZQQrDIBRFUedpU+chzf53mRUULG2M+M6FM9fBR9RaSqkAAAAwuQMAAAAAAACAKbwAAAAgwBsAAAACrAAAABBgBwAAgABPAAAACPAAAACAAAt0sjW4e40AkKDlTP5FGWCPwGffzPPda/03qVet56UkSbq2HvdfSeNmnqXr8x4jSdIY+V+Rskue5xN8TrleALQAAA==
+  </data>
+ </layer>
+ <layer name="warnings" width="960" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3XVzvXcQCG8b+XJpFVlCSzRDITEZHRklUaZqg0bG1Zkch4We4X4Pzrd3V/rus+f06fWEySJEmSJEnS/yI+LhY7RQl0mhIpic5QMqVQKqVROp2lc5RBmXQ+zt2SJEmSpJPvAj8wiy5SNl2iHLpMuZRH+VRAhVREV+gqFdO1QD8yqrslSZIkSWGU8ANL6TqV0Q0qpwqqpCqqphq6SbV0i+qonm4H+pFR3S1JkiRJCqOBH9hId6iJmukutVAr3aM2aqcO6qT79IAe0qNAPzKquyVJkiRJYTzmB3bRE+qmHuqlPuqnp/SMBug5vaCX9IoGaSjQj4zqbkmSJElSGMP8wBEapTF6TeM0QZP0ht7SO5qi9/SBPtInmg70I6O6W5IkSZIUxgw/cJbmaJ4WaJGW6DN9oa/0jb7TD/pJy/SLVgL9yKjuliRJkiSFscoPXKN12qDftElb9Ie26S/t0C79oz3apwM6DPQjo7pbkiRJkiRJkiRJkiRJkiRJkiRJknS8I7p9j8gAtAAA
   </data>
  </layer>
  <layer name="postes" width="960" height="12">
