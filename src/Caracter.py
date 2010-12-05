@@ -152,7 +152,6 @@ class Caracter(pygame.sprite.Sprite):
             self.pendingGetDown = False
 
     def doJump(self):
-
         if self.onGround:
             self.animation_key = "jumping"
             self.onGround = False

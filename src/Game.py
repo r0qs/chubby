@@ -34,7 +34,7 @@ RESET_DELAY = 50
 # Main Class of the game
 class Game:
 
-    def __init__(self,stage_path,fase_timeout, fatguy_x, fatguy_y):
+    def __init__(self,stage_path,fase_timeout, fatguy_x, fatguy_y, music):
         pygame.init()
         self.clock = pygame.time.Clock()
         self.initial_clock = pygame.time.get_ticks()
@@ -54,6 +54,8 @@ class Game:
         self.img_fatguy = pygame.image.load(os.path.join('', 'images', 'sprite.png'))
         
         #Sounds
+        self.bg_music = Music()
+        self.bg_music.load_music(music)
         self.beep = SoundEffect()
 
         # Loading Rolando 
@@ -65,7 +67,7 @@ class Game:
         self.fatguy_y = fatguy_y
         
         # Initial Speed of the camera
-        self.cam_speed  = (6,0)
+        self.cam_speed  = (70,0)
         
         # Loading the stage
         self.world_map = TileMapParser().parse_decode(stage_path)
@@ -110,9 +112,9 @@ class Game:
             while(g_object[0] + g_object[2] < real_x):
                 self.ground_objects.pop(0)
                 g_object = self.ground_objects[0]
-#            while(k_object[0] + k_object[2] < real_x):
-#                self.killer_objects.pop(0)
-#                k_object = self.killer_objects[0]
+          #  while(k_object[0] + k_object[2] < real_x):
+          #      self.killer_objects.pop(0)
+          #      k_object = self.killer_objects[0]
             while(c_object[0] + c_object[2] < real_x):
                 self.checkpoint_objects.pop(0)
                 c_object = self.checkpoint_objects[0]
@@ -124,6 +126,7 @@ class Game:
 
     # The main function of the class
     def main_loop(self):
+        self.bg_music.play_load_music(1)
         while self.running:
             self.clock.tick(90)
             self.recicle()
@@ -135,6 +138,7 @@ class Game:
             self.checkpoint_collision()
             self.draw_fatguy()
             self.event_handler()
+        self.bg_music.pause_music()
         # Return the position of Rolando
         return self.fatguy_x, self.fatguy_y
 
@@ -183,7 +187,7 @@ class Game:
 
         if self.secs < 10:
             if secs_before > self.secs:
-               self.beep.play_effect('beep.ogg', 0)
+               self.beep.play_effect('beep.ogg', 1, 0)
             timeup_text = self.font.render('0' + str(self.secs) + ':' + str(decs), 1, (200,5,15))
         else:
             timeup_text = self.font.render(str(self.secs) + ':' + str(decs), 1, (160,200,180))
@@ -218,7 +222,7 @@ class Game:
         if not self.dead:
             if self.fatguy.sprinting:
                 adjust = -4
-            if self.fatguy.x > 100:
+            if self.fatguy.x > 150:  ##
                 adjust += 2
             else:
                 adjust = 0
@@ -261,9 +265,10 @@ class Game:
             
     def event_handler(self):
         for e in pygame.event.get():
-            if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
-                self.running = False
+            if e.type == QUIT:
                 sys.exit()
+            elif (e.type == KEYDOWN and e.key == K_ESCAPE):
+                self.running = False
             elif e.type == KEYDOWN:
                 self.key_timeout = pygame.time.get_ticks()
                 self.fatguy.state = self.commandHandler.refresh_state(e.key)
@@ -339,15 +344,16 @@ def set_game_over_menu():
         
         
 def game_main():
-    bg_music = Music()
-    bg_music.play_music('Gluck-Melodie.ogg')
+    prolog_music = Music()
+    prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951-2.ogg',1)
     prolog = Story('prologo01', 6)
     prolog.play()
-    game = Game("huge_objects.tmx",35000,150,525)
+    prolog_music.fadeout_music(1)
+    game = Game("huge_objects.tmx",200000,150,525,'Dicennian_Running_Past.ogg')
     posx, posy = game.main_loop()
     print("POSICAO NO FINAL")
     print(posx ,posy)
-    game2 = Game("huge_objects.tmx",35000,posx,posy)
+    game2 = Game("huge_objects.tmx",200000,posx,posy,'CorvusCorax-Tourdion.ogg')
     game2.main_loop()
     game_over_menu = set_game_over_menu()
 

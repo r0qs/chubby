@@ -38,7 +38,7 @@ class Story:
 		adj_x, adj_y = 0 , 0
 		running = True
 		while running:
-			self.clock.tick(25)
+			self.clock.tick(26)
 			self.screen.blit(self.actual_image, (0 - adj_x, 0 - adj_y))
 			adj_x += 0.5
 			adj_y += 0.5
@@ -52,5 +52,3 @@ class Story:
 				if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
 					running = False
 			pygame.display.flip()
-        
-    
