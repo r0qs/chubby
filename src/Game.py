@@ -249,7 +249,11 @@ class Game:
         if col_type == 1:
             if not self.dead:
                 if pygame.sprite.collide_mask(self.fatguy, obj):
-                    self.fatguy.doCrashSide(obj.rect.x)
+                    print self.fatguy.real_x , obj.rect, obj.rect.left, self.fatguy.real_x > obj.rect.left
+                    if self.fatguy.real_x > obj.rect.left:
+                        self.fatguy.doCrashDown()
+                    else:
+                        self.fatguy.doCrashSide(obj.rect.x)
                     self.fatguy.sprinting = False
                     self.fatguy.onGround = True
                     self.dead = True
@@ -263,6 +267,12 @@ class Game:
         obj, col_type = self.fatguy.collides_with_objects(self.ground_objects)
         if  col_type == 1:
             self.fatguy.put_on_ground_running(obj[1])
+            if self.fatguy.broken_legs:
+                if self.shake_amplitude > 0:
+                        self.shake = (randrange(-self.shake_amplitude,self.shake_amplitude),randrange(-self.shake_amplitude,self.shake_amplitude) + random())
+                        self.shake_amplitude -= 1
+        else:
+            self.fatguy.onGround = False
             
     # Collides with the checkpoint 
     def checkpoint_collision(self):
@@ -358,15 +368,15 @@ def game_main():
     prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg',1)
     #prolog = Story('prologo01', 9)
     #prolog.play()
-    lala = Story('prolog01',4)
-    lala.play()
+    #lala = Story('prolog01',4)
+    #lala.play()
     prolog_music.fadeout_music(1)
     game = Game("huge_objects.tmx",200000,150,525,'Dicennian_Running_Past.ogg')
     posx, posy = game.main_loop()
     print("POSICAO NO FINAL")
     print(posx ,posy)
-    game2 = Game("huge_objects.tmx",200000,posx,posy,'CorvusCorax-Tourdion.ogg')
-    game2.main_loop()
+    game = Game("huge_objects.tmx",200000,posx,posy,'CorvusCorax-Tourdion.ogg')
+    game.main_loop()
     fail = Story('fail01', 3)
     fail.play()
     game_over_menu = set_game_over_menu()

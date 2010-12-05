@@ -12,6 +12,8 @@ class Caracter(pygame.sprite.Sprite):
 	        'jumping':self._anim_jump,
 	        'sprinting':self._anim_sprint,
 	        'crashed_side':self._anim_crash_side,
+	        'crashed_high':self._anim_crash_high,
+	        'crashed_down':self._anim_crash_down,
 	        'getting_down':self._anim_get_down,
 	        'rolling':self._anim_roll,
 	        'too_high':self._anim_too_high
@@ -26,6 +28,7 @@ class Caracter(pygame.sprite.Sprite):
         self.sprinting = False
         self.sliding = False
         self.pendingRoll = False
+        self.broken_legs = False
         self.pendingGetDown = False
         self.falling = False
         self.tooHigh = False   
@@ -91,7 +94,7 @@ class Caracter(pygame.sprite.Sprite):
         
         if self.onGround == False:
             if self.dy == 0 or \
-            self.dy - self.ddy > 0 and self.dy < 0:
+            self.dy - self.ddy >= 0 and self.dy < 0:
                 self.apex_height = self.y
                 self.falling = True
 
@@ -132,7 +135,7 @@ class Caracter(pygame.sprite.Sprite):
         self.dy = 0
         self.ddy = 0
         #self.animation_key = "running"
-        self.y = ground_y - self._h
+        self.y = ground_y - self._h + 2
         self.forceJump = 2
         if not self.onGround:
             self.onGround = True
@@ -144,6 +147,7 @@ class Caracter(pygame.sprite.Sprite):
             if self.pendingRoll == False:
                 #quebrou as pernas
                 self.stop()
+                self.doCrashHigh(ground_y)
         if self.pendingRoll:
             self.doRoll()
             self.pendingRoll = False
@@ -197,6 +201,16 @@ class Caracter(pygame.sprite.Sprite):
         real_object_side = object_side - self.real_x
         self.x = real_object_side + self.x - 100 + 32 #32 eh um ajuste para o sprite ficar bem posicionado
         self.animation_key = "crashed_side"
+        
+    def doCrashDown(self):
+        self.stop()
+        self.animation_key = "crashed_down"
+        
+    def doCrashHigh(self, ground_y):
+        self.stop()
+        self.y = ground_y - self._h + 2
+        self.broken_legs = True
+        self.animation_key = "crashed_high"
             
     def _anim_run(self, t):
         if t - self._last_update > self._delay:
@@ -227,14 +241,22 @@ class Caracter(pygame.sprite.Sprite):
         
     def _anim_get_down(self, t):
         self.image = self._framelist[10]
-        self._frame = 7
         self._last_update = t
+    
     def _anim_crash_side(self, t):
         self.image = self._framelist[11]
+        self._last_update = t
+        
+    def _anim_crash_down(self, t):
+        self.image = self._framelist[25]
+        
+    def _anim_crash_high(self, t):
+        self.image = self._framelist[12]
         self._frame = 7
         self._last_update = t
+        
     def _anim_too_high(self, t):
-        self.image = self._framelist[12]
+        self.image = self._framelist[13]
         self._frame = 7
         self._last_update = t
     
@@ -243,7 +265,7 @@ class Caracter(pygame.sprite.Sprite):
             self._frame += 1
             self.image = self._framelist[self._frame]
             self._last_update = t
-            if self._frame >= 23:
+            if self._frame >= 24:
                 self._frame = 0
                 self.animation_key = "running"
 #TODO:
