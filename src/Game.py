@@ -148,7 +148,7 @@ class Game:
             self.event_handler()
         self.bg_music.pause_music()
         # Return the position of Rolando
-        if self.dead:
+        if self.fatguy.dead:
             return self.fatguy_x, self.fatguy_y, False #perdeu!
         else:
             return 0, 0, True #ganhou!

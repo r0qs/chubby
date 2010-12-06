@@ -38,3 +38,6 @@ class SoundEffect:
         sound = pygame.mixer.Sound(os.path.join('','sounds', filename))
         channel.play(sound)
         CHANNELS[c] = channel
+    def stop_effect(self, c):
+        CHANNELS[c].stop()
+

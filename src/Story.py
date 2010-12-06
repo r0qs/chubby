@@ -50,7 +50,7 @@ class Story:
 			self.screen.blit(fill_surf, (0,0))
 			pygame.display.flip()
 
-	def play(self, draw_buttons=False):
+	def play(self, action_buttons=False):
 		adj_x, adj_y = 0 , 0
 		running = True
 		hit = False
@@ -61,16 +61,17 @@ class Story:
 			self.screen.blit(self.actual_image, (0 - adj_x, 0 - adj_y))
 			adj_x += 0.5
 			adj_y += 0.5
-			if len(self.buttons) > 0 and draw_buttons:
+			if len(self.buttons) > 0 and action_buttons:
 				char = self.buttons.pop(0)
 				button = self.font.render(char, 1, (0,200,0))
+				button_rect = pygame.Rect(600,500,200,200)
 				self.screen.blit(button, (600,500)) # blit actual_button
 			if self.actual_image.get_width() < self.screen.get_width() + adj_x or self.actual_image.get_height() < self.screen.get_height() + adj_y:
 				adj_x = 0
 				adj_y = 0
 				if len(self.story) == 1:
 					running = False
-				elif hit and draw_buttons:
+				elif hit and action_buttons:
 					self._next_image_wiyh_crazy_buttons()
 				else: self._next_image()
 			for e in pygame.event.get():
@@ -78,7 +79,7 @@ class Story:
 					running = False
 				if e.type is KEYDOWN:
 					key = pygame.key.name(e.key)
-					if draw_buttons:
+					if action_buttons:
 						if key == char:
 							count = count + 1
 							print key

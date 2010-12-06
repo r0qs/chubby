@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 
+from Sound import *
 
 class Caracter(pygame.sprite.Sprite):
     x,y = (0,0)
@@ -60,6 +61,8 @@ class Caracter(pygame.sprite.Sprite):
         
         self.lifes = 3 # Checkpoint chances (only 3 for while)
 
+        self.footsteps = SoundEffect()
+
     def set_pos(self, x, y):
         difference = x - self.x
         self.real_x += difference
@@ -112,12 +115,15 @@ class Caracter(pygame.sprite.Sprite):
         # animation
         self.animate[self.animation_key](t)
 
+        #sound effects
+#        if self._frame == 2:
+#            self.footsteps.play_effect('footsteps.ogg', 0.3, 1)
+
     def stop(self):
         self.ddx = 0
         self.dx = 0
         self.ddy = 0
         self.dy = 0
-    
     
     #FIXME: Essa colisao nao esta boa, pq ela esta checando colisao de rect do sprite com os rects dos objetos. 
     #Seria legal se fosse colisao de pixel do sprite com os rects dos objetos

@@ -4,7 +4,7 @@ from Menu import *
 # Global Variable that define tha actual stage of he player
 ACTUAL_STAGE = 1
 STAGE_WIN = (0,0)
-STAGE_CHANCE = 3
+STAGE_CHANCE = 2
 
 # The game over menu
 def set_game_over_menu(function_retry,function_quit=sys.exit):
@@ -68,6 +68,7 @@ def stage1_function():
     prolog.play()
     game = Game("huge_objects.tmx",100000,150,525,'Dicennian_Running_Past.ogg')
     while(chances > 0):
+        print "chances: " + str(chances)
         posx, posy , win = game.main_loop()
         print("POSICAO NO FINAL")
         print(posx ,posy, win)
@@ -78,7 +79,7 @@ def stage1_function():
             prolog.play(True)
             return
         else:
-            chances -= 1
+            chances = chances - 1
             game = Game("huge_objects.tmx",100000,posx,posy,'Dicennian_Running_Past.ogg')
             posx, posy, win = game.main_loop()
             print("POSICAO NO FINAL")
