@@ -1,6 +1,9 @@
 from Game import *
 from Menu import *
 
+import Garbage
+import gc
+
 # Global Variable that define tha actual stage of he player
 ACTUAL_STAGE = 1
 STAGE_WIN = (0,0)
@@ -75,8 +78,8 @@ def stage1_function():
         if win:
             # Put here the final story 
             print "Ganhou!"
-            fail = Story('fail01', 3, 'ensure-always.ogg')
             success = Story('suceed01', 7, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
+            fail = Story('fail01', 3, 'lost_dreams.ogg')
             if success.test_commands():
                 success.play()
             else: fail.play()
@@ -89,9 +92,10 @@ def stage1_function():
             print(posx ,posy, win)
     # Put here the failed story
     print "Perdeu!"
-    del(game)
     fail = fail = Story('fail01', 3, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
     fail.play()
+    del(game)
+    gc.collect()
     game_over_menu = set_game_over_menu(stage1_function,main_menu)
 
 def main_menu():
@@ -117,4 +121,7 @@ def main_menu():
     main_menu.main_loop(cursor,menu_screen,background)
     
     
-if __name__ == '__main__': main_menu()
+if __name__ == '__main__': 
+    main_menu()
+    #Garbage.log_garbage()
+    Garbage.print_garbage()

@@ -68,7 +68,7 @@
  </layer>
  <layer name="obstacles" width="960" height="12">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3cSwrCQAwA0Kboon7uf10VEaGoFGlqxnlv00W7yMBk0qTQYQAAAAAAAAAAAAAAAAAAqOMYv44AANYVahsAAAAdGPW/AAAA/Lnbt98x9MAAtCHULBqyxV6VEwB3S87DxzOVzs5dQhz7ImsD4HsVaxZ8krlX5QOwper/g1h6Jk7Xe4d4Xis4JcRxLrK23lTPE6AtFWsWvDJ/D8v414r+FwAA+qYP6EPWfHWtPnU+q5kS4m1xHpSdn+buAAAAAAAAALxzAW80bzgAtAAA
+   H4sIAAAAAAAAA+3cSwqDMBAAUCPtwn7uf922SBHsBymOnZj3Ni7MYgJJxhkhXQcAAAAAAAAAAAAAAAAAkMe5/DsCAFhXkdsAAABoQK/+BQAAYOce/377ogYGoA5FzqIiW6xVewJgtOQ8fI7JdHYeAuI4JpkbAL/LmLPgm8i1aj8AW8p+H8TSM3G4vzuV6ZnBJSCOa5K5tSb7PgHqkjFnwTvz77CIu1bUvwAA0DZ1QBui+qtr1anzXs0QEK9+0Ct9dwAAAAAAAAA+uQF8MP5xALQAAA==
   </data>
  </layer>
  <layer name="tunel" width="960" height="12">
@@ -98,7 +98,7 @@
   <object name="" x="15292" y="574" width="25718" height="24"/>
   <object name="" x="42384" y="573" width="1186" height="17"/>
   <object name="" x="43571" y="643" width="2147" height="11"/>
-  <object name="" x="46321" y="448" width="3266" height="12"/>
+  <object name="" x="46308" y="448" width="3276" height="14"/>
   <object name="" x="48475" y="258" width="1106" height="15"/>
   <object name="" x="49590" y="637" width="7439" height="14"/>
   <object name="" x="57068" y="451" width="393" height="11"/>
@@ -107,17 +107,17 @@
   <object name="" x="45735" y="517" width="555" height="9"/>
  </objectgroup>
  <objectgroup color="#aa0000" name="killer" width="960" height="12">
-  <object name="" x="6221" y="539" width="9" height="93"/>
-  <object name="" x="6926" y="413" width="10" height="97"/>
+  <object name="" x="6221" y="530" width="10" height="117"/>
+  <object name="" x="6926" y="402" width="9" height="121"/>
   <object name="" x="7370" y="-1" width="615" height="315"/>
-  <object name="" x="8402" y="236" width="8" height="144"/>
+  <object name="" x="8399" y="224" width="11" height="168"/>
   <object name="" x="10444" y="591" width="9" height="171"/>
   <object name="" x="11337" y="198" width="369" height="304"/>
-  <object name="" x="12508" y="549" width="11" height="22"/>
+  <object name="" x="12507" y="532" width="10" height="32"/>
   <object name="" x="15040" y="515" width="255" height="53"/>
   <object name="" x="15104" y="450" width="127" height="61"/>
   <object name="" x="15744" y="259" width="61" height="124"/>
-  <object name="" x="15678" y="386" width="192" height="57"/>
+  <object name="" x="15680" y="387" width="192" height="57"/>
   <object name="" x="15681" y="448" width="247" height="59"/>
   <object name="" x="18067" y="485" width="27" height="86"/>
   <object name="" x="19422" y="483" width="23" height="88"/>
@@ -129,34 +129,34 @@
    </properties>
   </object>
   <object name="" x="48462" y="279" width="1122" height="95"/>
-  <object name="" x="57032" y="488" width="7" height="148"/>
+  <object name="" x="57035" y="482" width="9" height="169"/>
   <object name="" x="58052" y="468" width="12" height="296"/>
   <object name="" x="57470" y="754" width="578" height="12"/>
   <object name="" x="41018" y="758" width="1356" height="9"/>
   <object name="" x="46289" y="461" width="6" height="52"/>
   <object name="" x="43717" y="585" width="49" height="49"/>
-  <object name="" x="43140" y="457" width="246" height="46"/>
+  <object name="" x="43140" y="453" width="246" height="53"/>
   <object name="" x="43209" y="392" width="109" height="57"/>
   <object name="" x="25435" y="535" width="9" height="32"/>
   <object name="" x="49115" y="217" width="10" height="30"/>
   <object name="" x="60125" y="596" width="7" height="33"/>
-  <object name="" x="58566" y="584" width="51" height="47"/>
-  <object name="" x="55684" y="451" width="245" height="123"/>
-  <object name="" x="54084" y="515" width="309" height="58"/>
+  <object name="" x="55684" y="451" width="246" height="119"/>
+  <object name="" x="54084" y="515" width="309" height="57"/>
   <object name="" x="54212" y="391" width="55" height="117"/>
   <object name="" x="54273" y="450" width="59" height="58"/>
   <object name="" x="52933" y="584" width="52" height="47"/>
   <object name="" x="51545" y="599" width="11" height="33"/>
   <object name="" x="45711" y="541" width="9" height="100"/>
+  <object name="" x="55815" y="393" width="115" height="51"/>
  </objectgroup>
  <objectgroup color="#ffff00" name="checkpoint" width="960" height="12">
   <object name="" x="8576" y="0" width="64" height="192"/>
   <object name="" x="42496" y="5" width="60" height="570"/>
-  <object name="" x="48900" y="12" width="64" height="448"/>
+  <object name="" x="48900" y="12" width="52" height="239"/>
   <object name="" x="20029" y="22" width="57" height="547"/>
   <object name="" x="61418" y="47" width="13" height="585"/>
  </objectgroup>
  <objectgroup color="#00007f" name="goal" width="960" height="12">
-  <object name="" x="772" y="407" width="64" height="236"/>
+  <object name="" x="61353" y="381" width="57" height="249"/>
  </objectgroup>
 </map>

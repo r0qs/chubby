@@ -23,12 +23,10 @@ class Story:
 		pygame.font.init()
 		#self.buttons = generate_buttons_sequence(5)
 		self.buttons = ['q','w','e','r','t']
-		self.font = pygame.font.Font(os.path.join('', 'data', 'buttons.ttf'), 70)
+		self.font = pygame.font.Font(os.path.join('', 'data', 'actionj.ttf'), 70)
 		self.font.set_bold(True)
 
 	def test_commands(self):
-		background = pygame.Surface(self.screen.get_size())
-		background = background.convert()
 		running = True
 		hit = False
 		count = 0
@@ -43,13 +41,12 @@ class Story:
 				adj_x = 0
 				adj_y = 0
 
-			if len(self.buttons) > 0 and not (iterator % 35):
+			if len(self.buttons) > 0 and not (iterator % 5):
 				char = self.buttons.pop(0)
-				button = self.font.render(char, 1, (100,255,100))
+				button = self.font.render(char, 1, (255,0,0))
 				button_rect = pygame.Rect(600,500,200,200)
 				if button != None:
-					background.blit(button, button_rect)
-					self.screen.blit(background, (0, 0))# ta horrivel!!
+					self.screen.blit(button, button_rect)
 			for e in pygame.event.get():
 				if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
 					running = False
@@ -62,10 +59,10 @@ class Story:
 						hit = False
 						button = None
 						return False
-			print "hit: " + str(hit) + "count: " + str(count)
+			#print "hit: " + str(hit) + "count: " + str(count)
 			if count == 5:
 				return True
-			elif iterator > 400:  #arranjar outra forma de sair:|
+			elif len(self.buttons) <= 0:  #arranjar outra forma de sair:|
 				return False
 			iterator = iterator + 1
 			pygame.display.flip()

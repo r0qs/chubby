@@ -1,1 +1,11 @@
-This game has no name
+The Chubby Game
+
+CREDITS:
+Josh Gray (MoonlitRaven) for Sky Running Music on www.newgrounds.com
+Dicennian for Running Past the Time Music on www.newgrounds.com
+Oistrakh plays Gluck Melodie - from Orfeo ed Euridice - Prolog Music
+
+RUN:
+	Abra um terminal, vá até o diretório onde se encontra o jogo e digite:
+			
+			python Good_intentions.py

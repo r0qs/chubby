@@ -334,7 +334,9 @@ class Game:
                 #sys.exit()
         pygame.display.flip()
         
-        
+    def __del__(self):
+        self = None
+        del self
 def fade_out(screen,clock):
     fill_surf = pygame.Surface((1024,768))
     fill_surf.fill((10,10,10))
