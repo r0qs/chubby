@@ -24,6 +24,7 @@ class Caracter(pygame.sprite.Sprite):
         self.sprint_timeout = 0
         self.apex_height = 0
         self.name = name
+        self.dead = False
         self.onGround = True
         self.sprinting = False
         self.sliding = False
@@ -58,8 +59,6 @@ class Caracter(pygame.sprite.Sprite):
         self._frame = 0
         
         self.lifes = 3 # Checkpoint chances (only 3 for while)
-
-        self.is_alive = True
 
     def set_pos(self, x, y):
         difference = x - self.x
@@ -199,17 +198,18 @@ class Caracter(pygame.sprite.Sprite):
 
     def doCrashSide(self, object_side):
         self.stop()
-        print 'X',self.x
-        real_object_side = object_side - self.real_x
-        self.x = real_object_side + self.x - 100 + 32 #32 eh um ajuste para o sprite ficar bem posicionado
+        self.dead = True
+        self.x += 32 #32 eh um ajuste para o sprite ficar bem posicionado
         self.animation_key = "crashed_side"
         
     def doCrashDown(self):
         self.stop()
+        self.dead = True
         self.animation_key = "crashed_down"
         
     def doCrashHigh(self, ground_y):
         self.stop()
+        self.dead = True
         self.y = ground_y - self._h + 2
         self.broken_legs = True
         self.animation_key = "crashed_high"

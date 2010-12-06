@@ -62,7 +62,6 @@ class Game:
         # Loading Rolando 
         self.fatguy = Caracter("Rolando", self.img_fatguy, 10, 115, 115, 25)
         self.commandHandler = CommandHandler(self.fatguy)
-        self.dead = False
         self.fatguy_x = fatguy_x%5120
         self.fatguy_y = fatguy_y
         self.fatguy.real_x = fatguy_x
@@ -209,7 +208,7 @@ class Game:
         if self.secs < 10:
             # Time's up
             if self.secs <= 0 and decs <= 0:
-                self.dead = True
+                self.fatguy.dead = True
                 #FIXME: the time cannot be negative
                 self.secs = 0
                 decs = 0
@@ -248,12 +247,9 @@ class Game:
         
         # Rolando's falling in the hole
         if self.fatguy.y > SCREEN_HEIGHT:
-            self.dead = True
+            self.fatguy.dead = True
         
-        if not self.fatguy.is_alive:
-            self.dead = True
-        
-        if not self.dead:
+        if not self.fatguy.dead:
             if self.fatguy.sprinting:
                 adjust = -4
             if self.fatguy.x > 100:
@@ -272,7 +268,7 @@ class Game:
     def killer_collision(self):
         obj, col_type = self.fatguy.collides_with_objects(self.killer_objects)
         if col_type == 1:
-            if not self.dead:
+            if not self.fatguy.dead:
                 if pygame.sprite.collide_mask(self.fatguy, obj):
                     print self.fatguy.real_x , obj.rect, obj.rect.left, self.fatguy.real_x > obj.rect.left
                     if self.fatguy.real_x > obj.rect.left:
@@ -281,7 +277,7 @@ class Game:
                         self.fatguy.doCrashSide(obj.rect.x)
                     self.fatguy.sprinting = False
                     self.fatguy.onGround = True
-                    self.dead = True
+                    self.fatguy.dead = True
             else:
                 if self.shake_amplitude > 0:
                     self.shake = (randrange(-self.shake_amplitude,self.shake_amplitude),randrange(-self.shake_amplitude,self.shake_amplitude) + random())
@@ -321,19 +317,21 @@ class Game:
             elif (e.type == KEYDOWN and e.key == K_ESCAPE):
                 self.running = False
             elif e.type == KEYDOWN:
-                self.key_timeout = pygame.time.get_ticks()
-                self.fatguy.state = self.commandHandler.refresh_state(e.key)
+                if not self.fatguy.dead:
+                    self.key_timeout = pygame.time.get_ticks()
+                    self.fatguy.state = self.commandHandler.refresh_state(e.key)
             elif e.type == KEYUP:
-                if e.key == K_UP:
-                    self.fatguy.stopJump()
+                if not self.fatguy.dead:
+                    if e.key == K_UP:
+                        self.fatguy.stopJump()
                 if e.key == K_DOWN:
                     if not self.fatguy.onGround:
                         self.fatguy.pendingGetDown = False
                     if self.fatguy.sliding: self.fatguy.stopGetDown()
-            if not self.fatguy.alive():
-                self.game_over()
-                pygame.time.wait(2000)
-                sys.exit()
+            #if self.fatguy.dead:
+                #self.game_over()
+                #pygame.time.wait(2000)
+                #sys.exit()
         pygame.display.flip()
         
         
@@ -348,22 +346,4 @@ def fade_out(screen,clock):
         screen.blit(fill_surf, (0,0))
         pygame.display.flip()
         
-        
-#def game_main():
-#    prolog_music = Music()
-#    prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg',1)
-#    prolog = Story('prologo01', 9)
-#    prolog.play()
-    #lala = Story('prolog01',4)
-    #lala.play()
-#    prolog_music.fadeout_music(1)
-#    game = Game("huge_objects.tmx",200000,150,525,'Dicennian_Running_Past.ogg')
-#    posx, posy = game.main_loop()
-#    print("POSICAO NO FINAL")
-#    print(posx ,posy)
-#    fail = Story('fail01', 3)
-#    fail.play()
-#    game_over_menu = set_game_over_menu()
-
-#if __name__ == "__main__": game_main()
 if __name__ == "__main__": main_loop()
