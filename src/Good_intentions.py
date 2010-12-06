@@ -73,6 +73,7 @@ def stage1_function():
             chances -= 1
             game = Game("huge_objects.tmx",100000,150,525,'Dicennian_Running_Past.ogg')
     # Put here the failed story
+    del(game)
     game_over_menu = set_game_over_menu(stage1_function,main_menu)
 
 def main_menu():

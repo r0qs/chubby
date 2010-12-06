@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
 <map version="1.0" orientation="orthogonal" width="960" height="12" tilewidth="64" tileheight="64">
  <tileset firstgid="1" name="proto06" tilewidth="64" tileheight="64">
   <image source="tilesets/proto06.png"/>
@@ -27,7 +26,7 @@
  </layer>
  <layer name="checkp_tiles" width="960" height="12">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3cwQ0AIQgEQPrvzhIswQ4s4HK+MEaZqWBfwGNDBHy10wEAAEjhrgNY66cDAACQwl0HsDZOBwAAIIW7DgAAAAAAAAAAAAAAAP75vwhABfYdwB3Ma3byfxGACuw7gDuY1+zk/yIAFdh3AHcwr6mkhc4DAAAA7+uh8wAAAMD7Rug8AABQxwRKIiESALQAAA==
+   H4sIAAAAAAAAA+3csQ2AMAwEwOy/HSMAEwQWIAUdIg1EUeI76XtXtgvLKcHT0rsAAAB+Ya8DeLeWbCV770IAAPjEXgdQl0uOkrN3IQAAfGKvAwAAAAAAAAAAAAAAgDr/FwGIwLwDGIN+TSv+LwIQgXkHMAb9mpb8XwQgAvMOYAz6NdEsyc0DAAAA81vvAAAAwMzyHQAAiOACpN64iQC0AAA=
   </data>
  </layer>
  <layer name="carros" width="960" height="12">
