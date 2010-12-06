@@ -10,13 +10,15 @@ import string
 
 class Story:
 
-	def __init__(self,folder, n_frames):
+	def __init__(self,folder, n_frames, musicname):
 		self.clock = pygame.time.Clock()
 		self.screen = pygame.display.set_mode((1024, 768))
 		self.story = []
 		for i in range(0,n_frames):
 			self.story.append(pygame.image.load(os.path.join('', 'stories/' + folder, str(i+1) + '.jpg')))
 		self.actual_image = self.story[0]
+		self.bg_music = Music()
+		self.bg_music.load_music(musicname)
 
 		pygame.font.init()
 		#self.buttons = generate_buttons_sequence(5)
@@ -53,6 +55,7 @@ class Story:
 		running = True
 		hit = False
 		count = 0
+		self.bg_music.play_load_music(1)
 		while running:
 			self.clock.tick(26)
 			self.screen.blit(self.actual_image, (0 - adj_x, 0 - adj_y))
@@ -82,6 +85,7 @@ class Story:
 						else:
 							hit = False
 			pygame.display.flip()
+		self.bg_music.fadeout_music(1)
 
 def generate_buttons_sequence(length):
 	buttons = []

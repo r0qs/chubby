@@ -15,6 +15,11 @@
    H4sIAAAAAAAAA+3ZQQrDIBRFUedpU+chzf53mRUULG2M+M6FM9fBR9RaSqkAAAAwuQMAAAAAAACAKbwAAAAgwBsAAAACrAAAABBgBwAAgABPAAAACPAAAACAAAt0sjW4e40AkKDlTP5FGWCPwGffzPPda/03qVet56UkSbq2HvdfSeNmnqXr8x4jSdIY+V+Rskue5xN8TrleALQAAA==
   </data>
  </layer>
+ <layer name="builds" width="960" height="12">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3I0Q1AUBREwaf/3lABKkAFWB3cH5KXzCQn2WxrAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPxlTFOaiz8AAAD0aElr2oo/AAAA9GhPRzqLPwAAAPToSvc7htoPAAAAAAAAAAAAAPClB5VyB9YAtAAA
+  </data>
+ </layer>
  <layer name="warnings" width="960" height="12">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAA+3XVzvXcQCG8b+XJpFVlCSzRDITEZHRklUaZqg0bG1Zkch4We4X4Pzrd3V/rus+f06fWEySJEmSJEnS/yI+LhY7RQl0mhIpic5QMqVQKqVROp2lc5RBmXQ+zt2SJEmSpJPvAj8wiy5SNl2iHLpMuZRH+VRAhVREV+gqFdO1QD8yqrslSZIkSWGU8ANL6TqV0Q0qpwqqpCqqphq6SbV0i+qonm4H+pFR3S1JkiRJCqOBH9hId6iJmukutVAr3aM2aqcO6qT79IAe0qNAPzKquyVJkiRJYTzmB3bRE+qmHuqlPuqnp/SMBug5vaCX9IoGaSjQj4zqbkmSJElSGMP8wBEapTF6TeM0QZP0ht7SO5qi9/SBPtInmg70I6O6W5IkSZIUxgw/cJbmaJ4WaJGW6DN9oa/0jb7TD/pJy/SLVgL9yKjuliRJkiSFscoPXKN12qDftElb9Ie26S/t0C79oz3apwM6DPQjo7pbkiRJkiRJkiRJkiRJkiRJkiRJknS8I7p9j8gAtAAA
@@ -27,7 +32,7 @@
  </layer>
  <layer name="checkp_tiles" width="960" height="12">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3cwQ0AIQgEQPrvzhIswQ4s4HK+MEaZqWBfwGNDBHy10wEAAEjhrgNY66cDAACQwl0HsDZOBwAAIIW7DgAAAAAAAAAAAAAAAP75vwhABfYdwB3Ma3byfxGACuw7gDuY1+zk/yIAFdh3AHcwr6mkhc4DAAAA7+uh8wAAAMD7Rug8AABQxwRKIiESALQAAA==
+   H4sIAAAAAAAAA+3cQQ0AIQwEwPp3hwQk4AABlyM8IKQwo6Cf3fTRNAK+yukBAABYwl4HMFZPDwAAwBL2OoCxdnoAAACWsNcBAAAAAAAAAAAAAADAP/8XIS/5hXnyApCDvmYn/xchL/mFefICkIO+Zif/FyEv+YV58gKQg77mJSXcPAAAAHC/Gm4eAAAAuF8LNw8AALyjAw01JAcAtAAA
   </data>
  </layer>
  <layer name="carros" width="960" height="12">
@@ -37,7 +42,7 @@
  </layer>
  <layer name="obstacles" width="960" height="12">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3czQqDMAwAYCvbwf28/+tuQ4YgbLqxuNR+38WDHlJoWpNCuw4AAAAAAAAAAACAWpzLvyMAAAAAAOBTRW8XAACABvTqXwAAAHbucfbbFzUwAHUo9iwqssVclRMAozXr4fObTGvnISCOY5KxAfC9jHsWvBM5V+UDsKXs9yGuXROH+7tTmZ4ZXALiuCYZW2uy5wlQl6U9y30WZDH/D4uYm+pfAABolzqgHVH91V/VqfNezRAQb8YzjCXR+anvDgAAAAAAAMArNzIl/2QAtAAA
+   H4sIAAAAAAAAA+3czQrCMAwA4GXoYf68/+uqiAhDZYqZqf2+yw7rIYWmXTLoMAAAAAAAAAAAAADQin38OgIAAAAAAN4VersAAAB0YFT/AgAA8Ocu/37HUAMD0IZwZtGQNdaqnAC4WrIf3sZU2js3CXFsi8wNgM9VPLPglcy1Kh+ANVW/D3Hpnjid3+3i/qzgkBDHscjcelM9T4C2VDyz4JH5d1jGXSvqXwAA6Js6oA9Z/dVv1anzXs2UEG+L/aDs/NR3BwAAAAAAAOCZE4VWU8wAtAAA
   </data>
  </layer>
  <layer name="tunel" width="960" height="12">
@@ -102,7 +107,6 @@
   <object name="" x="57470" y="754" width="578" height="12"/>
   <object name="" x="41018" y="758" width="1356" height="9"/>
   <object name="" x="46285" y="492" width="7" height="143"/>
-  <object name="" x="43652" y="531" width="55" height="108"/>
   <object name="" x="43717" y="585" width="49" height="49"/>
   <object name="" x="43140" y="457" width="246" height="46"/>
   <object name="" x="43209" y="392" width="109" height="57"/>
@@ -123,8 +127,9 @@
   <object name="" x="14081" y="1" width="61" height="572"/>
   <object name="" x="42496" y="5" width="60" height="570"/>
   <object name="" x="48900" y="12" width="64" height="448"/>
+  <object name="" x="29442" y="16" width="62" height="550"/>
  </objectgroup>
  <objectgroup color="#00007f" name="goal" width="960" height="12">
-  <object name="" x="61248" y="514" width="66" height="116"/>
+  <object name="" x="61373" y="388" width="54" height="243"/>
  </objectgroup>
 </map>

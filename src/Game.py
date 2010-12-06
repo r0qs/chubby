@@ -89,9 +89,9 @@ class Game:
         self.playerGroup = pygame.sprite.RenderUpdates()
         self.playerGroup.add(self.fatguy)
 
-        self.objectGroup = pygame.sprite.Group()
-        self.enemyGroup = pygame.sprite.Group()
-        self.sceneGroup = pygame.sprite.Group()
+        #self.objectGroup = pygame.sprite.Group()
+        #self.enemyGroup = pygame.sprite.Group()
+        #self.sceneGroup = pygame.sprite.Group()
         
         # Controlling the movement of the background
         self.offset = self.initialize_slices() - ROLANDO_DISTANCE
@@ -149,12 +149,10 @@ class Game:
             self.event_handler()
         self.bg_music.pause_music()
         # Return the position of Rolando
-        # Return the position of Rolando
         if self.dead:
-            return self.fatguy_x, self.fatguy_y
+            return self.fatguy_x, self.fatguy_y, False #perdeu!
         else:
-            return 0,0
-            
+            return 0, 0, True #ganhou!
 
     # Throw away utilized objects
     def recicle(self):
@@ -163,8 +161,8 @@ class Game:
             k_object = self.killer_objects[0]
         except IndexError:
             running = False
-            prolog = Story('suceed01', 7)
-            prolog.play()
+#            prolog = Story('suceed01', 7)
+#            prolog.play()
         c_object = self.checkpoint_objects[0]
         
         if g_object[0] + g_object[2] <= self.fatguy.real_x:
@@ -190,8 +188,8 @@ class Game:
                 self.screen.blit(self.actual_slice.subsurface((self.offset,0,SCREEN_WIDTH, SCREEN_HEIGHT)), self.shake)
             except ValueError:
                 running = False
-                prolog = Story('suceed01', 7)
-                prolog.play()
+#                prolog = Story('suceed01', 7)
+#                prolog.play()
         
         self.offset += self.cam_speed[0]
         if(self.offset + SCREEN_WIDTH) > SLICE_SIZE_PIXEL and self.transition == False:
@@ -350,68 +348,22 @@ def fade_out(screen,clock):
         screen.blit(fill_surf, (0,0))
         pygame.display.flip()
         
-def set_game_over_menu():
-    width = 1024
-    height = 768
-    pygame.display.init
-    menu_screen = pygame.display.set_mode((width,height))
-    # Background
-    background = pygame.image.load(os.path.join('', 'images', 'game_over_bg.jpg'))
-    background = background.convert()
-
-    # Cursor
-    pygame.mouse.set_visible(False)
-    cursor = Cursor(16,16,'images/cursor.png')
-
-    #Options in menu
-    retry = Option(100,200,550,61,'images/retry.png','images/retry_big.png',game_main, 1.109,0.05)
-    quit = Option(100,270,274,60,'images/quit.png','images/quit_big.png',sys.exit, 1.11,0.05)
-
-    # Menu
-    menu = Menu()
-    menu.append(retry)
-    menu.append(quit)
-
-    menu_screen.blit(background, (0, 0))
-    cursor.draw(menu_screen)
-    menu.draw(menu_screen)
-    pygame.display.flip()
-
-    # Event loop
-    while 1:
-        menu.update(cursor)
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.display.quit
-                sys.exit()
-                return
-            elif event.type == MOUSEMOTION:
-                pygame.mouse.get_pos()
-                cursor.update()
-            elif event.type == MOUSEBUTTONDOWN:
-                menu.activate()
-        menu_screen.blit(background, (0, 0))
-        menu.draw(menu_screen)
-        cursor.draw(menu_screen)
-        pygame.display.flip()
         
-        
-def game_main():
-    prolog_music = Music()
-    prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg',1)
-    prolog = Story('prologo01', 9)
-    prolog.play()
+#def game_main():
+#    prolog_music = Music()
+#    prolog_music.play_music('Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg',1)
+#    prolog = Story('prologo01', 9)
+#    prolog.play()
     #lala = Story('prolog01',4)
     #lala.play()
-    prolog_music.fadeout_music(1)
-    game = Game("huge_objects.tmx",200000,150,525,'Dicennian_Running_Past.ogg')
-    posx, posy = game.main_loop()
-    print("POSICAO NO FINAL")
-    print(posx ,posy)
-    game = Game("huge_objects.tmx",200000,posx,posy,'CorvusCorax-Tourdion.ogg')
-    game.main_loop()
-    fail = Story('fail01', 3)
-    fail.play()
-    game_over_menu = set_game_over_menu()
+#    prolog_music.fadeout_music(1)
+#    game = Game("huge_objects.tmx",200000,150,525,'Dicennian_Running_Past.ogg')
+#    posx, posy = game.main_loop()
+#    print("POSICAO NO FINAL")
+#    print(posx ,posy)
+#    fail = Story('fail01', 3)
+#    fail.play()
+#    game_over_menu = set_game_over_menu()
 
-if __name__ == "__main__": game_main()
+#if __name__ == "__main__": game_main()
+if __name__ == "__main__": main_loop()

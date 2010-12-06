@@ -63,16 +63,31 @@ def stage_select():
 def stage1_function():
     global ACTUAL_STAGE
     chances = STAGE_CHANCE
+    # Put here the prolog story
+    prolog = Story('prologo01', 9, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
+    prolog.play()
     game = Game("huge_objects.tmx",100000,150,525,'Dicennian_Running_Past.ogg')
     while(chances > 0):
-        posx, posy = game.main_loop()
-        if (posx,posy) == STAGE_WIN:
-            # Put here the final story
+        posx, posy , win = game.main_loop()
+        print("POSICAO NO FINAL")
+        print(posx ,posy, win)
+        if win:
+            # Put here the final story 
+            print "Ganhou!"
+            prolog = Story('suceed01', 7, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
+            prolog.play(True)
             return
         else:
             chances -= 1
-            game = Game("huge_objects.tmx",100000,150,525,'Dicennian_Running_Past.ogg')
+            game = Game("huge_objects.tmx",100000,posx,posy,'Dicennian_Running_Past.ogg')
+            posx, posy, win = game.main_loop()
+            print("POSICAO NO FINAL")
+            print(posx ,posy, win)
     # Put here the failed story
+    print "Perdeu!"
+    fail = Story('fail01', 3, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
+    fail.play()
+    del(game)
     game_over_menu = set_game_over_menu(stage1_function,main_menu)
 
 def main_menu():
