@@ -26,8 +26,49 @@ class Story:
 		self.font = pygame.font.Font(os.path.join('', 'data', 'buttons.ttf'), 70)
 		self.font.set_bold(True)
 
-	def _next_image_wiyh_crazy_buttons(self):
-		return
+	def test_commands(self):
+		background = pygame.Surface(self.screen.get_size())
+		background = background.convert()
+		running = True
+		hit = False
+		count = 0
+		iterator = 0
+		adj_x, adj_y = 0 , 0
+		while running:
+			self.clock.tick(25)
+			self.screen.blit(self.actual_image, (0 - adj_x, 0 - adj_y))
+			adj_x += 0.5
+			adj_y += 0.5
+			if self.actual_image.get_width() < self.screen.get_width() + adj_x or self.actual_image.get_height() < self.screen.get_height() + adj_y:
+				adj_x = 0
+				adj_y = 0
+
+			if len(self.buttons) > 0 and not (iterator % 35):
+				char = self.buttons.pop(0)
+				button = self.font.render(char, 1, (100,255,100))
+				button_rect = pygame.Rect(600,500,200,200)
+				if button != None:
+					background.blit(button, button_rect)
+					self.screen.blit(background, (0, 0))# ta horrivel!!
+			for e in pygame.event.get():
+				if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
+					running = False
+				if e.type is KEYDOWN:
+					key = pygame.key.name(e.key)
+					if key == char:
+						count = count + 1
+						hit = True
+					else:
+						hit = False
+						button = None
+						return False
+			print "hit: " + str(hit) + "count: " + str(count)
+			if count == 5:
+				return True
+			elif iterator > 400:  #arranjar outra forma de sair:|
+				return False
+			iterator = iterator + 1
+			pygame.display.flip()
 
 	def _next_image(self):
 		fill_surf = pygame.Surface((1024,768))
@@ -50,43 +91,27 @@ class Story:
 			self.screen.blit(fill_surf, (0,0))
 			pygame.display.flip()
 
-	def play(self, action_buttons=False):
+	def play(self):
 		adj_x, adj_y = 0 , 0
 		running = True
-		hit = False
-		count = 0
 		self.bg_music.play_load_music(1)
 		while running:
-			self.clock.tick(26)
+			self.clock.tick(25)
 			self.screen.blit(self.actual_image, (0 - adj_x, 0 - adj_y))
 			adj_x += 0.5
 			adj_y += 0.5
-			if len(self.buttons) > 0 and action_buttons:
-				char = self.buttons.pop(0)
-				button = self.font.render(char, 1, (0,200,0))
-				button_rect = pygame.Rect(600,500,200,200)
-				self.screen.blit(button, (600,500)) # blit actual_button
 			if self.actual_image.get_width() < self.screen.get_width() + adj_x or self.actual_image.get_height() < self.screen.get_height() + adj_y:
 				adj_x = 0
 				adj_y = 0
 				if len(self.story) == 1:
 					running = False
-				elif hit and action_buttons:
-					self._next_image_wiyh_crazy_buttons()
 				else: self._next_image()
 			for e in pygame.event.get():
 				if e.type == QUIT or (e.type == KEYDOWN and e.key == K_ESCAPE):
 					running = False
-				if e.type is KEYDOWN:
-					key = pygame.key.name(e.key)
-					if action_buttons:
-						if key == char:
-							count = count + 1
-							print key
-						else:
-							hit = False
 			pygame.display.flip()
 		self.bg_music.fadeout_music(1)
+
 
 def generate_buttons_sequence(length):
 	buttons = []

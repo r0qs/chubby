@@ -75,8 +75,11 @@ def stage1_function():
         if win:
             # Put here the final story 
             print "Ganhou!"
-            prolog = Story('suceed01', 7, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
-            prolog.play(True)
+            fail = Story('fail01', 3, 'ensure-always.ogg')
+            success = Story('suceed01', 7, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
+            if success.test_commands():
+                success.play()
+            else: fail.play()
             return
         else:
             chances = chances - 1
@@ -86,9 +89,9 @@ def stage1_function():
             print(posx ,posy, win)
     # Put here the failed story
     print "Perdeu!"
-    fail = Story('fail01', 3, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
-    fail.play()
     del(game)
+    fail = fail = Story('fail01', 3, 'Gluck-Melodie-Orfeo-ed-Euridice-1951.ogg')
+    fail.play()
     game_over_menu = set_game_over_menu(stage1_function,main_menu)
 
 def main_menu():

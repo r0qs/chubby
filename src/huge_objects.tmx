@@ -157,7 +157,6 @@
   <object name="" x="61418" y="47" width="13" height="585"/>
  </objectgroup>
  <objectgroup color="#00007f" name="goal" width="960" height="12">
-  <object name="" x="61361" y="391" width="54" height="243"/>
-  <object name="" x="768" y="384" width="65" height="250"/>
+  <object name="" x="772" y="407" width="64" height="236"/>
  </objectgroup>
 </map>
