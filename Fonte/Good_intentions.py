@@ -175,7 +175,7 @@ def stage2_function():
     fail.play_loop(1)
     del(game)
     gc.collect()
-    game_over_menu = set_game_over_menu(stage1_function,main_menu)
+    game_over_menu = set_game_over_menu(stage2_function,main_menu)
     
 def main_menu():
 
